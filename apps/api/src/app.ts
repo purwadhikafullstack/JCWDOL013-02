@@ -1,68 +1,16 @@
-import express, {
-  json,
-  urlencoded,
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  Router,
-} from 'express';
+import express, { Application } from 'express';
+import { API_PORT } from './config/index';
+import path = require('path');
 import cors from 'cors';
-import { PORT } from './config';
-import { SampleRouter } from './routers/sample.router';
 
-export default class App {
-  private app: Express;
+const PORT: number = Number(API_PORT) || 8000;
+const app: Application = express();
 
-  constructor() {
-    this.app = express();
-    this.configure();
-    this.routes();
-    this.handleError();
-  }
+app.use(cors());
+app.use(express.json());
+app.use('/public', express.static(path.join(__dirname, 'public')));
+require('./routes')(app);
 
-  private configure(): void {
-    this.app.use(cors());
-    this.app.use(json());
-    this.app.use(urlencoded({ extended: true }));
-  }
-
-  private handleError(): void {
-    // not found
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      if (req.path.includes('/api/')) {
-        res.status(404).send('Not found !');
-      } else {
-        next();
-      }
-    });
-
-    // error
-    this.app.use(
-      (err: Error, req: Request, res: Response, next: NextFunction) => {
-        if (req.path.includes('/api/')) {
-          console.error('Error : ', err.stack);
-          res.status(500).send('Error !');
-        } else {
-          next();
-        }
-      },
-    );
-  }
-
-  private routes(): void {
-    const sampleRouter = new SampleRouter();
-
-    this.app.get('/api', (req: Request, res: Response) => {
-      res.send(`Hello, Purwadhika Student API!`);
-    });
-
-    this.app.use('/api/samples', sampleRouter.getRouter());
-  }
-
-  public start(): void {
-    this.app.listen(PORT, () => {
-      console.log(`  ➜  [API] Local:   http://localhost:${PORT}/`);
-    });
-  }
-}
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
