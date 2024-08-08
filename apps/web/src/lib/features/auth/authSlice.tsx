@@ -11,12 +11,6 @@ type User = {
   phone?: string;
   gender?: string;
   birthDate?: string;
-  isVerified?: boolean;
-  role?: string;
-  longitude?: number;
-  latitude?: number;
-  storeId?: string;
-  referralCode?: string;
 };
 
 type Status = {
@@ -111,7 +105,6 @@ export const signOut = () => async (dispatch: Dispatch) => {
     dispatch(logoutState());
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('lastVisitedPage');
   } catch (err) {
     console.error(err);
   }
@@ -140,12 +133,6 @@ export const checkToken = (token: string) => async (dispatch: Dispatch) => {
         phone: user?.phone,
         gender: user?.gender,
         birthDate: user?.birthDate,
-        isVerified: user?.isVerified,
-        role: user?.role.name,
-        longitude: user?.longitude,
-        latitude: user?.latitude,
-        storeId: user?.userStores[0]?.storeId,
-        referralCode: user?.referralCode,
       }),
     );
 
@@ -158,57 +145,6 @@ export const checkToken = (token: string) => async (dispatch: Dispatch) => {
     return false;
   }
 };
-
-export const updateProfile =
-  (id: string, params: IUserProfile) => async (dispatch: Dispatch) => {
-    try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await instance.patch(
-        `/users/${id}`,
-        { ...params },
-        config,
-      );
-
-      dispatch(updateProfileState({ ...params }));
-      localStorage.setItem('user', JSON.stringify(data?.data));
-
-      return data?.data;
-    } catch (err: any) {
-      console.error(err);
-      return err.response.data.message;
-    }
-  };
-
-export const updateAvatar =
-  (id: string, formData: FormData) => async (dispatch: Dispatch) => {
-    try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-      const { data } = await instance.patch(
-        `/users/${id}/avatar`,
-        formData,
-        config,
-      );
-      const image = data?.data.image;
-
-      dispatch(updateAvatarState(image));
-      localStorage.setItem('user', JSON.stringify(data?.data));
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  };
 
 export const {
   loginState,

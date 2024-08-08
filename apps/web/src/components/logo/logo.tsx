@@ -3,7 +3,7 @@ import React from 'react';
 
 const Logo = () => {
   return (
-    <div className="flex gap-3 justify-center p-4 mb-5 border-b-2">
+    <div className="flex gap-3 justify-center p-4 mb-5 border-b-2 hover:cursor-default">
       <Image
         src="/assets/image/invoice.png"
         alt="logo"
