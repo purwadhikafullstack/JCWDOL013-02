@@ -7,7 +7,11 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        pattern: 'url("/pattern.png")',
+      },
+    },
+    plugins: [],
   },
-  plugins: [],
 };

@@ -1,8 +1,9 @@
 import { UserLinkItem } from '@/interfaces/navbar.interface';
 import { IoNewspaperOutline } from 'react-icons/io5';
-import { MdOutlineDashboard, MdOutlineDesignServices } from 'react-icons/md';
+import { MdOutlineDesignServices } from 'react-icons/md';
 import { TbStatusChange } from 'react-icons/tb';
 import { SiHomebridge } from 'react-icons/si';
+import { IoIosPeople } from 'react-icons/io';
 
 export const LinkItems: Array<UserLinkItem> = [
   {
@@ -24,9 +25,9 @@ export const LinkItems: Array<UserLinkItem> = [
     key: 'Invoices',
   },
   {
-    name: 'Status',
-    icon: TbStatusChange,
-    href: '/dashboard/status',
-    key: 'Status',
+    name: 'Customers',
+    icon: IoIosPeople,
+    href: '/dashboard/customers',
+    key: 'Customers',
   },
 ];

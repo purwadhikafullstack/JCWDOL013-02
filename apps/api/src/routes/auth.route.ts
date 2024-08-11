@@ -1,5 +1,6 @@
 import {
   loginController,
+  refreshTokenController,
   registerController,
   verifyController,
 } from '@/controllers/auth.controller';
@@ -11,5 +12,6 @@ const router = express.Router();
 router.post('/register', registerController);
 router.post('/login', loginController);
 router.post('/verify', verifyToken, verifyController);
+router.get('/', verifyToken, refreshTokenController);
 
 export default router;

@@ -16,7 +16,10 @@ export default function DashboardLayout({
 
   return (
     <>
-      <div className="w-full h-full fixed">
+      <div
+        className="w-full h-full fixed"
+        style={{ backgroundImage: 'url("/assets/image/pattern.png")' }}
+      >
         <div className="flex flex-no-wrap">
           {/* Sidebar starts */}
           <SideBar />
@@ -39,7 +42,7 @@ export default function DashboardLayout({
             {/* Navigation ends */}
 
             <div className="h-full">
-              <div className="w-full h-full rounded bg-gray-50">{children}</div>
+              <div className="w-full h-full rounded">{children}</div>
             </div>
           </div>
         </div>

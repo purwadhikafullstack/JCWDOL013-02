@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {
   loginAction,
+  refreshTokenAction,
   registerAction,
   verifyAction,
 } from '@/actions/auth.action';
@@ -58,4 +59,28 @@ const verifyController = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { registerController, loginController, verifyController };
+const refreshTokenController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const email = req.user?.email as string;
+
+    const result = await refreshTokenAction(email);
+
+    res.status(200).json({
+      message: 'Refresh token success',
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export {
+  registerController,
+  loginController,
+  verifyController,
+  refreshTokenController,
+};

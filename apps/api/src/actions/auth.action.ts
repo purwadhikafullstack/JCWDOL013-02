@@ -5,6 +5,7 @@ import { User } from '@prisma/client';
 import { genSalt, hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { API_KEY } from '../config/index';
+import { HttpException } from '@/exceptions/httpException';
 
 const registerAction = async (data: RegisterAuth): Promise<User> => {
   try {
@@ -62,4 +63,27 @@ const verifyAction = async (data: Auth): Promise<void> => {
   }
 };
 
-export { registerAction, loginAction, verifyAction };
+const refreshTokenAction = async (email: string) => {
+  try {
+    const user = await getUserByEmailQuery(email);
+
+    if (!user) throw new HttpException(500, 'Something went wrong');
+
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      gender: user.gender,
+      birthDate: user.birthDate,
+    };
+
+    const token = sign(payload, String(API_KEY), { expiresIn: '1hr' });
+
+    return { user, token };
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { registerAction, loginAction, verifyAction, refreshTokenAction };
