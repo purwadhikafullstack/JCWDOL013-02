@@ -17,7 +17,7 @@ export default function DashboardLayout({
   return (
     <>
       <div
-        className="w-full h-full fixed"
+        className="w-full h-full fixed tracking-tighter"
         style={{ backgroundImage: 'url("/assets/image/pattern.png")' }}
       >
         <div className="flex flex-no-wrap">

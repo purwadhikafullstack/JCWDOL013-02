@@ -21,8 +21,10 @@ export default function AuthUser({ children, url = '/' }: Props) {
         const token = localStorage.getItem('token');
 
         const result = await dispatch(checkToken(token as string));
-        if (result?.role) {
+        if (result) {
           router.push(url);
+        } else {
+          router.push('/');
         }
 
         setIsLoading(false);

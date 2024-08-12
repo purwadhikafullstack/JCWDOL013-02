@@ -1,45 +1,61 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getCustomersByUserID } from '@/services/customer.service'; // Adjust the path
-import Link from 'next/link';
+import { getCustomersByUserID } from '@/services/customer.service';
 import { useRouter } from 'next/navigation';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
+import { ICustomer } from '@/interfaces/customer.interface';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 const CustomersPage = () => {
-  const [customers, setCustomers] = useState({
-    customers: [],
-    pages: 1,
-  });
+  const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-
+  const [page, setPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(5);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [filters, setFilters] = useState({
     keyword: '',
-    page: 1,
-    size: 5,
     userId: '',
   });
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
+        setLoading(true);
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (user.id) {
           const userId = user.id;
-          const result = await getCustomersByUserID({ ...filters, userId });
-          setCustomers(result);
+          const result = await getCustomersByUserID({
+            userId,
+            page,
+            size,
+            keyword: filters.keyword,
+          });
+
+          if (result) {
+            setCustomers(result.customers);
+            setTotalPages(result.pages);
+          } else {
+            toast.error('Failed to fetch customers');
+            setCustomers([]);
+            setTotalPages(0);
+          }
+        } else {
+          toast.error('User not found');
+          router.push('/');
         }
       } catch (error) {
         console.error('Error fetching customers:', error);
+        toast.error('Failed to fetch customers');
       } finally {
         setLoading(false);
       }
     };
 
     fetchCustomers();
-  }, [filters]);
+  }, [filters, page, size, router]);
 
   if (loading) {
     return (
@@ -54,29 +70,37 @@ const CustomersPage = () => {
 
   const handleSoftDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
-      await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API_URL}/customers/${id}/soft-delete`,
-        { method: 'DELETE' },
-      );
-      toast.success('Customer deleted successfully');
+      try {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/customers/${id}/soft-delete`,
+          { method: 'DELETE' },
+        );
+        toast.success('Customer deleted successfully');
+        setFilters((prev) => ({ ...prev }));
+      } catch (error) {
+        console.error('Failed to delete customer:', error);
+        toast.error('Failed to delete customer');
+      }
     }
-    setFilters({ ...filters });
-    router.push('/dashboard/customers');
   };
 
   return (
     <div className="p-4">
-      <div className="my-10 bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-3xl font-serif font-bold border-b-2 mb-4">
+      <div className="my-10 border-gray-800 bg-slate-800 rounded-xl shadow-2xl p-6 shadow-teal-200">
+        <h2 className="text-3xl font-serif font-bold border-b-2 mb-4 text-teal-400 border-teal-900">
           Customer Management
         </h2>
-        <div className="flex gap-4 pb-8">
+        <div className="flex gap-4 pb-8 justify-end">
           <input
             type="text"
             placeholder="Search..."
             value={filters.keyword}
             onChange={(e) =>
-              setFilters({ ...filters, keyword: e.target.value, page: 1 })
+              setFilters((filters) => ({
+                ...filters,
+                keyword: e.target.value,
+                page: 1,
+              }))
             }
             className="px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
@@ -99,19 +123,29 @@ const CustomersPage = () => {
                 <th className="px-4 py-2 border">Email</th>
                 <th className="px-4 py-2 border">Type</th>
                 <th className="px-4 py-2 border">Address</th>
-                <th className="px-4 py-2 border">Payment</th>
-                <th className="px-4 py-2 border">Action</th>
+                <th className="px-4 py-2 border text-center">Payment</th>
+                <th className="px-4 py-2 border text-center">Action</th>
               </tr>
             </thead>
             <tbody>
-              {customers?.customers?.map((customer: any, index: number) => (
+              {customers?.map((customer: any, index: number) => (
                 <tr key={customer.id}>
-                  <td className="px-4 py-2 border">{index + 1}</td>
-                  <td className="px-4 py-2 border">{customer.name}</td>
-                  <td className="px-4 py-2 border">{customer.customerEmail}</td>
-                  <td className="px-4 py-2 border">{customer.type}</td>
-                  <td className="px-4 py-2 border">{customer.address}</td>
-                  <td className="text-center border px-1">
+                  <td className="px-4 py-2 border text-gray-100">
+                    {index + 1 + (page - 1) * size}
+                  </td>
+                  <td className="px-4 py-2 border text-gray-100">
+                    {customer.name}
+                  </td>
+                  <td className="px-4 py-2 border text-gray-100">
+                    {customer.customerEmail}
+                  </td>
+                  <td className="px-4 py-2 border text-gray-100">
+                    {customer.type}
+                  </td>
+                  <td className="px-4 py-2 border text-gray-100">
+                    {customer.address}
+                  </td>
+                  <td className="text-center border px-1 text-gray-100">
                     {customer.paymentMethod}
                   </td>
                   <td className="px-4 py-2 border text-center">
@@ -119,7 +153,7 @@ const CustomersPage = () => {
                       onClick={() => handleSoftDelete(customer.id)}
                       className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
                     >
-                      Delete
+                      <FaRegTrashAlt />
                     </button>
                   </td>
                 </tr>
@@ -131,36 +165,24 @@ const CustomersPage = () => {
           <div className="flex items-center">
             <button
               aria-label="left"
-              onClick={() =>
-                setFilters((prevFilters) => ({
-                  ...prevFilters,
-                  page: Math.max(prevFilters.page - 1, 1),
-                }))
-              }
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               className={`p-2 border rounded-md shadow-sm bg-white hover:bg-gray-100 ${
-                filters.page === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                page === 1 ? 'opacity-50 cursor-not-allowed' : ''
               }`}
-              disabled={filters.page === 1}
+              disabled={page === 1}
             >
               <GrFormPreviousLink />
             </button>
-            <div className="px-4">
-              {filters.page} / {customers.pages}
+            <div className="px-4 text-gray-100">
+              {page} / {totalPages}
             </div>
             <button
               aria-label="right"
-              onClick={() =>
-                setFilters((prevFilters) => ({
-                  ...prevFilters,
-                  page: Math.min(prevFilters.page + 1, customers.pages),
-                }))
-              }
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               className={`p-2 border rounded-md shadow-sm bg-white hover:bg-gray-100 ${
-                filters.page === customers.pages
-                  ? 'opacity-50 cursor-not-allowed'
-                  : ''
+                page === totalPages ? 'opacity-50 cursor-not-allowed' : ''
               }`}
-              disabled={filters.page === customers.pages}
+              disabled={page === totalPages}
             >
               <GrFormNextLink />
             </button>

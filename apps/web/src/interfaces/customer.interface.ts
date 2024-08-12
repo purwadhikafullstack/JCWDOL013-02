@@ -5,6 +5,7 @@ export interface ICustomer {
   address: string;
   createdBy: string;
   customerEmail: string;
+  pages: number;
 }
 
 export interface IFilterCustomer {
@@ -12,4 +13,9 @@ export interface IFilterCustomer {
   page?: number;
   size?: number;
   userId?: string;
+}
+
+export interface IResultCustomer {
+  customers: ICustomer[];
+  pages: number;
 }

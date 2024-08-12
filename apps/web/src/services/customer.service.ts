@@ -1,4 +1,7 @@
-import { IFilterCustomer } from '@/interfaces/customer.interface';
+import {
+  IFilterCustomer,
+  IResultCustomer,
+} from '@/interfaces/customer.interface';
 import instance from '@/utils/axiosInstance';
 
 export const createCustomer = async (formData: any) => {
@@ -17,44 +20,25 @@ export const createCustomer = async (formData: any) => {
   }
 };
 
-// export const getCustomers = async ({
-//   keyword = '',
-//   page = 1,
-//   size = 10,
-// }: IFilterCustomer) => {
-//   try {
-//     const { data } = await instance.get(
-//       `/users?keyword=${keyword}&page=${page}&size=${size}`,
-//     );
-//     const users = data?.data;
-//     return users;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
-// export const getCustomersByUserID = async (userId: any) => {
-//   try {
-//     const { data } = await instance.get(`/customers/${userId}`);
-//     const user = data?.data;
-//     return user;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
 export const getCustomersByUserID = async ({
   keyword = '',
   page = 1,
-  size = 10,
+  size = 1000,
   userId = '',
 }: IFilterCustomer) => {
   try {
-    const { data } = await instance.get(
-      `/customers/${userId}?keyword=${keyword}&page=${page}&size=${size}`,
+    const { data } = await instance.get<IResultCustomer>(
+      `/customers/${userId}`,
+      {
+        params: {
+          keyword,
+          page,
+          size,
+        },
+      },
     );
-    const products = data?.data;
-    return products;
+
+    return data;
   } catch (err) {
     console.error(err);
   }

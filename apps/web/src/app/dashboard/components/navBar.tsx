@@ -113,7 +113,12 @@ const NavBar = ({
                     />
                     <div className="w-2 h-2 rounded-full bg-green-400 border border-white absolute inset-0 mb-0 mr-0 m-auto" />
                   </div>
-                  <p className="text-gray-800 text-sm mx-3">{user.email}</p>
+                  <div>
+                    <p className="text-gray-800 text-sm mx-3 font-bold">
+                      {user.name}
+                    </p>
+                    <p className="text-gray-800 text-sm mx-3">{user.email}</p>
+                  </div>
                   <div className="cursor-pointer text-gray-600">
                     <svg
                       aria-haspopup="true"
