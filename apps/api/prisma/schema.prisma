@@ -89,18 +89,21 @@ model Tax {
 }
 
 model Item {
-  id                String          @id @default(uuid())
-  price             Float
-  type              String
-  user              User            @relation(fields: [userId], references: [id])
-  userId            String          @map(name: "user_id")
-  customer          Customer        @relation(fields: [customerId], references: [id])
-  customerId        String          @map(name: "customer_id")
-  categoryItem      CategoryItem    @relation(fields: [categoryItemId], references: [id])
-  categoryItemId    String          @map(name: "category_item")
-  tax               Tax             @relation(fields: [taxId], references: [id])
-  taxId             String          @map(name: "tax_id")
+  id                String           @id @default(uuid())
+  name              String
+  price             Float?
+  type              String?
+  user              User?            @relation(fields: [userId], references: [id])
+  userId            String?          @map(name: "user_id")
+  customer          Customer?        @relation(fields: [customerId], references: [id])
+  customerId        String?          @map(name: "customer_id")
+  categoryItem      CategoryItem?    @relation(fields: [categoryItemId], references: [id])
+  categoryItemId    String?          @map(name: "category_item")
+  tax               Tax?             @relation(fields: [taxId], references: [id])
+  taxId             String?          @map(name: "tax_id")
   invoiceItem       InvoiceItem[]
+  deletedAt         DateTime?
+
 
 @@map(name: "item")
 }

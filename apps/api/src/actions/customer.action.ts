@@ -10,7 +10,6 @@ import {
   softDeleteCustomer,
 } from '@/queries/customer.query';
 import { Customer } from '@prisma/client';
-import { Request, Response } from 'express';
 
 const createCustomerAction = async (data: ICustomer): Promise<Customer> => {
   try {

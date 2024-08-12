@@ -2,8 +2,12 @@ import {
   createCustomerAction,
   getCustomersByUserIDAction,
 } from '@/actions/customer.action';
+import { IFilterCustomer } from '@/interfaces/customer.interface';
 import { softDeleteCustomer } from '@/queries/customer.query';
+import { PrismaClient } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
+
+const prisma = new PrismaClient();
 
 const createCustomerController = async (
   req: Request,
@@ -32,13 +36,50 @@ const getCustomersByUserIDController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const filters = req.query;
-    const data = await getCustomersByUserIDAction(filters);
+    const {
+      keyword = '',
+      page = 1,
+      size = 1000,
+    } = req.query as IFilterCustomer;
 
-    res.status(200).json({
-      message: 'Get customers success',
-      data,
+    const { userId } = req.params;
+    // const data = await getCustomersByUserIDAction(filters);
+    if (!userId) {
+      res.status(400).json({ message: 'User ID is required' });
+    }
+    const customers = await prisma.customer.findMany({
+      where: {
+        userId: userId,
+        deletedAt: null,
+        name: {
+          contains: keyword,
+        },
+      },
+      orderBy: {
+        name: 'asc',
+      },
+      skip: Number(page) > 0 ? (Number(page) - 1) * Number(size) : 0,
+      take: Number(size),
     });
+
+    const data = await prisma.customer.aggregate({
+      _count: {
+        id: true,
+      },
+      where: {
+        name: {
+          contains: keyword,
+        },
+      },
+    });
+    const count = data._count.id;
+    const pages = Math.ceil(count / size);
+
+    if (customers.length === 0) {
+      res.status(404).json({ message: 'No customers found for this user' });
+    }
+
+    res.status(200).json({ customers, pages });
   } catch (err) {
     next(err);
   }
