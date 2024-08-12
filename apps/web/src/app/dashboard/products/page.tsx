@@ -7,44 +7,37 @@ import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
 import { IProduct } from '@/interfaces/product.interface';
 import { FaRegTrashAlt } from 'react-icons/fa';
+import CustomerSearchBar from '@/components/searchBar/searchBar';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(5);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [filters, setFilters] = useState({
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(5);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [filters, setFilters] = useState<{ keyword: string; page: number }>({
     keyword: '',
-    userId: '',
+    page: 1,
   });
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.id) {
-          const userId = user.id;
-          const result = await getProductsByUserID({
-            userId,
-            page,
-            size,
-            keyword: filters.keyword,
-          });
+        const result = await getProductsByUserID({
+          page,
+          size,
+          keyword: filters.keyword,
+        });
 
-          if (result) {
-            setProducts(result.products);
-            setTotalPages(result.pages);
-          } else {
-            toast.error('Failed to fetch products');
-            setProducts([]);
-            setTotalPages(0);
-          }
+        if (result) {
+          setProducts(result.products);
+          setTotalPages(result.pages);
         } else {
-          toast.error('User not found');
-          router.push('/');
+          toast.error('Failed to fetch products');
+          setProducts([]);
+          setTotalPages(0);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -55,7 +48,7 @@ const ProductsPage = () => {
     };
 
     fetchProducts();
-  }, [filters, router]);
+  }, [filters, size]);
 
   if (loading) {
     return (
@@ -86,24 +79,12 @@ const ProductsPage = () => {
 
   return (
     <div className="p-4">
-      <div className="my-10 border-gray-800 bg-slate-800 rounded-xl shadow-md p-6">
+      <div className="my-10 border-gray-800 bg-slate-800 rounded-xl shadow-2xl shadow-teal-200 p-6">
         <h2 className="text-3xl font-serif font-bold border-teal-900 border-b-2 mb-4 text-teal-400 tracking-tighter">
-          Product Management
+          Product & Service Management
         </h2>
         <div className="flex gap-4 pb-8 justify-end">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={filters.keyword}
-            onChange={(e) =>
-              setFilters((filters) => ({
-                ...filters,
-                keyword: e.target.value,
-                page: 1,
-              }))
-            }
-            className="px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          />
+          <CustomerSearchBar setFilters={setFilters} />
           <button
             className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
             onClick={() => {

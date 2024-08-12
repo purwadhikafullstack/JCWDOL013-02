@@ -1,5 +1,6 @@
 import { createProductAction } from '@/actions/product.action';
 import { IFilterProduct } from '@/interfaces/product.interface';
+import { softDeleteProduct } from '@/queries/product.query';
 import { PrismaClient } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
@@ -32,50 +33,65 @@ const getProductsByUserIDController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { keyword = '', page = 1, size = 1000 } = req.query as IFilterProduct;
+    const { keyword = '', page = 1, size = 5 } = req.query as IFilterProduct;
+
     const { userId } = req.params;
 
     if (!userId) {
       res.status(400).json({ message: 'User ID is required' });
-      return;
     }
-
-    const skip = Number(page) > 0 ? (Number(page) - 1) * Number(size) : 0;
-    const take = Number(size);
-
     const products = await prisma.item.findMany({
       where: {
-        userId,
+        userId: userId,
         deletedAt: null,
-        name: { contains: keyword },
+        name: {
+          contains: keyword,
+        },
       },
-      orderBy: { name: 'asc' },
-      skip,
-      take,
+      orderBy: {
+        name: 'asc',
+      },
+      skip: Number(page) > 0 ? (Number(page) - 1) * Number(size) : 0,
+      take: Number(size),
     });
 
-    // Count total products for pagination
-    const totalCount = await prisma.item.aggregate({
-      _count: { id: true },
+    const data = await prisma.item.aggregate({
+      _count: {
+        id: true,
+      },
       where: {
-        name: { contains: keyword },
+        userId: userId,
+        deletedAt: null,
+        name: {
+          contains: keyword,
+        },
       },
     });
-
-    const count = totalCount._count.id;
-    const pages = Math.ceil(count / size);
+    const count = data._count.id;
+    const pages = Math.ceil(count / Number(size));
 
     if (products.length === 0) {
       res.status(404).json({ message: 'No products found for this user' });
-      return; // Prevent further execution after sending response
     }
 
-    res.status(200).json({ products, pages });
+    res.status(200).json({ products, pages, size: Number(size), count });
   } catch (err) {
-    next(err); // Properly pass the error to the next middleware
+    next(err);
   }
 };
 
-export default getProductsByUserIDController;
+export const softDeleteProductAction = async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-export { createProductController };
+  try {
+    const deletedProduct = await softDeleteProduct(id);
+    res.status(200).json({
+      message: 'Product soft deleted successfully',
+      data: deletedProduct,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to soft delete Product' });
+  }
+};
+
+export { createProductController, getProductsByUserIDController };

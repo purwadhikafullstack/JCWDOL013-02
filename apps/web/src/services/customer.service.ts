@@ -23,17 +23,17 @@ export const createCustomer = async (formData: any) => {
 export const getCustomersByUserID = async ({
   keyword = '',
   page = 1,
-  size = 1000,
   userId = '',
 }: IFilterCustomer) => {
   try {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.id;
     const { data } = await instance.get<IResultCustomer>(
       `/customers/${userId}`,
       {
         params: {
           keyword,
           page,
-          size,
         },
       },
     );

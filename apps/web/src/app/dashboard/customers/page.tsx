@@ -7,44 +7,37 @@ import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
 import { ICustomer } from '@/interfaces/customer.interface';
 import { FaRegTrashAlt } from 'react-icons/fa';
+import CustomerSearchBar from '@/components/searchBar/searchBar';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(5);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(5);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<{ keyword: string; page: number }>({
     keyword: '',
-    userId: '',
+    page: 1,
   });
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.id) {
-          const userId = user.id;
-          const result = await getCustomersByUserID({
-            userId,
-            page,
-            size,
-            keyword: filters.keyword,
-          });
+        const result = await getCustomersByUserID({
+          page,
+          size,
+          keyword: filters.keyword,
+        });
 
-          if (result) {
-            setCustomers(result.customers);
-            setTotalPages(result.pages);
-          } else {
-            toast.error('Failed to fetch customers');
-            setCustomers([]);
-            setTotalPages(0);
-          }
+        if (result) {
+          setCustomers(result.customers);
+          setTotalPages(result.pages);
         } else {
-          toast.error('User not found');
-          router.push('/');
+          toast.error('Failed to fetch customers');
+          setCustomers([]);
+          setTotalPages(0);
         }
       } catch (error) {
         console.error('Error fetching customers:', error);
@@ -55,7 +48,7 @@ const CustomersPage = () => {
     };
 
     fetchCustomers();
-  }, [filters, page, size, router]);
+  }, [filters, size]);
 
   if (loading) {
     return (
@@ -91,19 +84,7 @@ const CustomersPage = () => {
           Customer Management
         </h2>
         <div className="flex gap-4 pb-8 justify-end">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={filters.keyword}
-            onChange={(e) =>
-              setFilters((filters) => ({
-                ...filters,
-                keyword: e.target.value,
-                page: 1,
-              }))
-            }
-            className="px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          />
+          <CustomerSearchBar setFilters={setFilters} />
           <button
             className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
             onClick={() => {

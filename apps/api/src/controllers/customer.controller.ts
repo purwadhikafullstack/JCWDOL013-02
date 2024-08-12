@@ -36,14 +36,10 @@ const getCustomersByUserIDController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const {
-      keyword = '',
-      page = 1,
-      size = 1000,
-    } = req.query as IFilterCustomer;
+    const { keyword = '', page = 1, size = 5 } = req.query as IFilterCustomer;
 
     const { userId } = req.params;
-    // const data = await getCustomersByUserIDAction(filters);
+
     if (!userId) {
       res.status(400).json({ message: 'User ID is required' });
     }
@@ -67,19 +63,21 @@ const getCustomersByUserIDController = async (
         id: true,
       },
       where: {
+        userId: userId,
+        deletedAt: null,
         name: {
           contains: keyword,
         },
       },
     });
     const count = data._count.id;
-    const pages = Math.ceil(count / size);
+    const pages = Math.ceil(count / Number(size));
 
     if (customers.length === 0) {
       res.status(404).json({ message: 'No customers found for this user' });
     }
 
-    res.status(200).json({ customers, pages });
+    res.status(200).json({ customers, pages, size: Number(size), count });
   } catch (err) {
     next(err);
   }

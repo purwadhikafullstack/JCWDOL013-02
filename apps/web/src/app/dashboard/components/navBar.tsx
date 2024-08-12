@@ -27,7 +27,7 @@ const NavBar = ({
   const dispatch = useAppDispatch();
 
   return (
-    <nav className="h-20 flex items-center lg:items-stretch justify-end lg:justify-end bg-gradient-to-l from-teal-500 to-slate-300 shadow relative">
+    <nav className="h-20 flex items-center lg:items-stretch justify-end lg:justify-end bg-gradient-to-l from-teal-500 to-slate-300 relative">
       <div className="hidden lg:flex w-full pr-6 justify-end">
         <div className="w-1/2 hidden lg:flex">
           <div className="w-full flex items-center pl-8 justify-end">

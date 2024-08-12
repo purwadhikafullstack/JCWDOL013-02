@@ -20,15 +20,14 @@ export const createProduct = async (formData: any) => {
 export const getProductsByUserID = async ({
   keyword = '',
   page = 1,
-  size = 1000,
-  userId = '',
 }: IFilterProduct) => {
   try {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.id;
     const { data } = await instance.get<IResultProduct>(`/products/${userId}`, {
       params: {
         keyword,
         page,
-        size,
       },
     });
 

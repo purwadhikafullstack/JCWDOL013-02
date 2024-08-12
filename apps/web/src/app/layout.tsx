@@ -23,7 +23,18 @@ export default function RootLayout({
         <body className={inter.className}>
           <Auth>
             {children}
-            <ToastContainer position="top-center" />
+            <ToastContainer
+              position="top-center"
+              theme="colored"
+              toastStyle={{
+                borderRadius: '20px',
+              }}
+              style={{ textAlign: 'center' }}
+              limit={1}
+              autoClose={500}
+              closeButton={false}
+              hideProgressBar
+            />
           </Auth>
         </body>
       </html>
