@@ -5,7 +5,7 @@ import NavItems from './navItems';
 
 const SideBar = () => {
   return (
-    <div className="absolute lg:relative w-64 min-h-screen hidden lg:block bg-gradient-to-br from-teal-50 via-slate-300 to-green-500 shadow-2xl shadow-slate-500">
+    <div className="fixed w-64 min-h-screen hidden lg:block bg-gradient-to-br from-teal-50 via-slate-300 to-green-500 shadow-2xl shadow-slate-500 z-10">
       <div className="flex items-center justify-center mx-10">
         <Logo />
       </div>
@@ -17,6 +17,10 @@ const SideBar = () => {
           children={item.name}
         />
       ))}
+      <div className="text-center font-light cursor-default mt-72">
+        <p className="">© Invoeasy, v.0.0.1</p>
+        2024 All Rights Reserved
+      </div>
     </div>
   );
 };

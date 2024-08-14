@@ -17,8 +17,11 @@ export default function DashboardLayout({
   return (
     <>
       <div
-        className="w-full h-full fixed tracking-tighter"
-        style={{ backgroundImage: 'url("/assets/image/pattern.png")' }}
+        className="w-full h-full relative tracking-tighter"
+        style={{
+          backgroundImage: 'url("/assets/image/pattern.png")',
+          height: '190vh',
+        }}
       >
         <div className="flex flex-no-wrap">
           <SideBar />
@@ -33,7 +36,9 @@ export default function DashboardLayout({
               setNotif={setNotif}
             />
             <div className="h-full">
-              <div className="w-full h-full rounded">{children}</div>
+              <div className="lg:w-4/5 w-full h-full rounded lg:ml-72">
+                {children}
+              </div>
             </div>
           </div>
         </div>

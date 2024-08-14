@@ -1,4 +1,6 @@
 import { createInvoiceAction } from '@/actions/invoice.action';
+import { sendInvoiceEmail } from '@/helpers/nodemailer';
+import { generateInvoicePDF } from '@/helpers/pdfkit';
 import { IFilterInvoice } from '@/interfaces/invoice.interface';
 import { softDeleteInvoice } from '@/queries/invoice.query';
 import { PrismaClient } from '@prisma/client';
@@ -14,13 +16,26 @@ const createInvoiceController = async (
   try {
     const params = req.body;
 
+    const customer = await prisma.customer.findUnique({
+      where: { id: params.customerId },
+    });
+
     const data = await createInvoiceAction({
       ...params,
+    });
+
+    const pdfPath = generateInvoicePDF(data);
+    const email = await sendInvoiceEmail({
+      to: customer?.customerEmail ?? '',
+      subject: 'Invoeasy',
+      text: `${data.invoiceNumber}`,
+      attachmentPath: pdfPath,
     });
 
     res.status(200).json({
       message: 'Create Invoice success',
       data,
+      email,
     });
   } catch (err) {
     next(err);

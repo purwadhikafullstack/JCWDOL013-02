@@ -13,6 +13,9 @@ export interface IInvoice {
   deletedAt?: Date;
   totalPrice: number;
   tax: number;
+  customerEmail: string;
+  customerName: string;
+  customerId: string;
 }
 
 export interface IFilterInvoice {
