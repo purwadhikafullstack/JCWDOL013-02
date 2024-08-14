@@ -35,7 +35,6 @@ const ProductsPage = () => {
           setProducts(result.products);
           setTotalPages(result.pages);
         } else {
-          toast.error('Failed to fetch products');
           setProducts([]);
           setTotalPages(0);
         }
@@ -48,7 +47,7 @@ const ProductsPage = () => {
     };
 
     fetchProducts();
-  }, [filters, size]);
+  }, [filters, page]);
 
   if (loading) {
     return (
@@ -99,7 +98,7 @@ const ProductsPage = () => {
           <table className="min-w-full text-left border border-collapse table-auto">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-4 py-2 border">No.</th>
+                <th className="px-4 py-2 border text-center">No.</th>
                 <th className="px-4 py-2 border">Name</th>
                 <th className="px-4 py-2 border">Type</th>
                 <th className="px-4 py-2 border">Price</th>
@@ -107,9 +106,19 @@ const ProductsPage = () => {
               </tr>
             </thead>
             <tbody>
+              {products?.length === 0 && (
+                <tr>
+                  <td
+                    className="px-4 py-10 border text-center text-gray-300 text-3xl"
+                    colSpan={7}
+                  >
+                    No Products yet, Please add a new one
+                  </td>
+                </tr>
+              )}
               {products?.map((product: any, index: number) => (
                 <tr key={product.id}>
-                  <td className="px-4 py-2 border text-gray-100">
+                  <td className="px-4 py-2 border text-gray-100 text-center">
                     {index + 1 + (page - 1) * size}
                   </td>
                   <td className="px-4 py-2 border text-gray-100">

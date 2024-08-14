@@ -94,6 +94,7 @@ const page = () => {
                   <option value="ml">ml</option>
                   <option value="lt">lt</option>
                   <option value="kg">kg</option>
+                  <option value="kg">hr</option>
                 </select>
                 <p className="mt-2 text-sm text-gray-500">
                   Selected unit: {formData.type}

@@ -2,10 +2,10 @@ import { Item } from '@prisma/client';
 
 export interface IProduct {
   id?: string;
-  type?: string;
-  userId: string;
-  price?: number;
   name: string;
+  type?: string;
+  price?: number;
+  userId: string;
 }
 
 export interface IFilterProduct {

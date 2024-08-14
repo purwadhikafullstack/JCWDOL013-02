@@ -50,14 +50,22 @@ model Customer {
 
 model Invoice {
   id              String          @id @default(uuid())
-  status          String
+  invoiceNumber   String?         @map(name: "invoice_number")
+  status          String          @default("Pending")
+  quantity        Float?          @default(1)
+  totalPrice      Float?
+  tax             Float?        
+  invoiceDate     DateTime        @default(now()) @map(name: "invoice_date")
   dueDate         DateTime        @default(now()) @map(name: "due_date")
   termsCondition  String
+  customer        Customer?       @relation(fields: [customerId], references: [id])
+  customerId      String?         @map(name: "customer_id")
+  item            Item?           @relation(fields: [itemId], references: [id])
+  itemId          String?         @map(name: "product_id")
   user            User            @relation(fields: [userId], references: [id])
   userId          String          @map(name: "user_id")
-  customer        Customer[]
   categoryItem    CategoryItem[]
-  tax             Tax[]
+  deletedAt       DateTime?
 
 @@map(name: "invoice")  
 }
@@ -81,7 +89,6 @@ model Tax {
   userId            String          @map(name: "user_id")
   customer          Customer        @relation(fields: [customerId], references: [id])
   customerId        String          @map(name: "customer_id")
-  invoice           Invoice         @relation(fields: [invoiceId], references: [id])
   invoiceId         String          @map(name: "invoice_id")
   item              Item[]
 
@@ -103,6 +110,7 @@ model Item {
   taxId             String?          @map(name: "tax_id")
   invoiceItem       InvoiceItem[]
   deletedAt         DateTime?
+  invoice           Invoice[]
 
 
 @@map(name: "item")

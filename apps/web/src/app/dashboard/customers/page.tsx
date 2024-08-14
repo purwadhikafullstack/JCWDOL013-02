@@ -35,7 +35,6 @@ const CustomersPage = () => {
           setCustomers(result.customers);
           setTotalPages(result.pages);
         } else {
-          toast.error('Failed to fetch customers');
           setCustomers([]);
           setTotalPages(0);
         }
@@ -48,7 +47,7 @@ const CustomersPage = () => {
     };
 
     fetchCustomers();
-  }, [filters, size]);
+  }, [filters, page, router]);
 
   if (loading) {
     return (
@@ -99,7 +98,7 @@ const CustomersPage = () => {
           <table className="min-w-full text-left border-collapse table-auto">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-4 py-2 border">No.</th>
+                <th className="px-4 py-2 border text-center">No.</th>
                 <th className="px-4 py-2 border">Name</th>
                 <th className="px-4 py-2 border">Email</th>
                 <th className="px-4 py-2 border">Type</th>
@@ -109,9 +108,19 @@ const CustomersPage = () => {
               </tr>
             </thead>
             <tbody>
+              {customers?.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="px-4 py-10 border text-gray-50 text-center text-2xl"
+                  >
+                    No customers found, please add a new one
+                  </td>
+                </tr>
+              )}
               {customers?.map((customer: any, index: number) => (
                 <tr key={customer.id}>
-                  <td className="px-4 py-2 border text-gray-100">
+                  <td className="px-4 py-2 border text-gray-100 text-center">
                     {index + 1 + (page - 1) * size}
                   </td>
                   <td className="px-4 py-2 border text-gray-100">

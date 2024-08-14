@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FormikProps, Form, Field } from 'formik';
 import { FormValues } from '@/types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Link from 'next/link';
 import { TransitionLink } from '@/components/utils/transitionLink';
 
 export default function innerForm(props: FormikProps<FormValues>) {
