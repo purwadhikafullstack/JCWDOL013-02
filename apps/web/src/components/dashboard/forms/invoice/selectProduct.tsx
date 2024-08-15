@@ -3,7 +3,7 @@ import React, { ChangeEventHandler } from 'react';
 import { FaPlusCircle } from 'react-icons/fa';
 
 type Product = {
-  formData: string;
+  formDataItemId: string;
   handleChange: ChangeEventHandler<HTMLSelectElement>;
   products: any[];
   formDataQuantity: number;
@@ -11,7 +11,7 @@ type Product = {
 };
 
 const SelectProduct = ({
-  formData,
+  formDataItemId,
   handleChange,
   products,
   formDataQuantity,
@@ -29,7 +29,7 @@ const SelectProduct = ({
         <select
           id="itemId"
           name="itemId"
-          value={formData}
+          value={formDataItemId}
           onChange={handleChange}
           className="mt-1 block w-fit border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md text-md"
           style={{ height: '30px', width: '370px' }}

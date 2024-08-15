@@ -33,7 +33,12 @@ const getProductsByUserIDController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { keyword = '', page = 1, size = 5 } = req.query as IFilterProduct;
+    const {
+      keyword = '',
+      page = 1,
+      size = 5,
+      type = '',
+    } = req.query as IFilterProduct;
 
     const { userId } = req.params;
 
@@ -47,6 +52,7 @@ const getProductsByUserIDController = async (
         name: {
           contains: keyword,
         },
+        type: type ? type : undefined,
       },
       orderBy: {
         name: 'asc',
@@ -65,6 +71,7 @@ const getProductsByUserIDController = async (
         name: {
           contains: keyword,
         },
+        type: type,
       },
     });
     const count = data._count.id;

@@ -1,8 +1,17 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import dotenv from 'dotenv';
 import path from 'path';
+import { NODEMAILER_EMAIL } from '@/config';
+import { NODEMAILER_PASS } from '@/config';
 
-// Load environment variables from .env file
+export const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: String(NODEMAILER_EMAIL),
+    pass: String(NODEMAILER_PASS),
+  },
+});
+
 dotenv.config();
 
 interface EmailOptions {
@@ -12,7 +21,6 @@ interface EmailOptions {
   attachmentPath?: string;
 }
 
-// Create a transporter using SMTP with credentials
 const createTransporter = (): Transporter => {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,

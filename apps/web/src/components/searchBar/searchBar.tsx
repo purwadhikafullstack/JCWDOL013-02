@@ -3,7 +3,15 @@ import React, { useState, useCallback } from 'react';
 
 interface CustomerSearchBarProps {
   setFilters: React.Dispatch<
-    React.SetStateAction<{ keyword: string; page: number }>
+    React.SetStateAction<{
+      keyword: string;
+      page: number;
+      startDate: string;
+      endDate: string;
+      status: string;
+      type: string;
+      paymentMethod: string;
+    }>
   >;
 }
 

@@ -13,6 +13,8 @@ export interface IFilterCustomer {
   page?: number;
   size?: number;
   userId?: string;
+  type?: string;
+  paymentMethod?: string;
 }
 
 export interface IResultCustomer {

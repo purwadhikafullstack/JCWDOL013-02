@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { IInvoice } from '@/interfaces/invoice.interface'; // Define IInvoice interface
 import InvoiceSearchBar from '@/components/searchBar/searchBar'; // Adjust as needed
 import { FaRegTrashAlt } from 'react-icons/fa';
+import { Loading } from '../../../components/dashboard/loading/loadData';
+import DatePicker from '@/components/dashboard/datePicker';
 
 const InvoicePage = () => {
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
@@ -16,10 +18,30 @@ const InvoicePage = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [filters, setFilters] = useState<{ keyword: string; page: number }>({
+  const [filters, setFilters] = useState<{
+    keyword: string;
+    page: number;
+    startDate: string;
+    endDate: string;
+    status: string;
+    type: string;
+    paymentMethod: string;
+  }>({
     keyword: '',
     page: 1,
+    startDate: '',
+    endDate: '',
+    status: '',
+    type: '',
+    paymentMethod: '',
   });
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilters((prev) => ({
+      ...prev,
+      status: e.target.value,
+    }));
+  };
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -29,6 +51,9 @@ const InvoicePage = () => {
           page,
           size,
           keyword: filters.keyword,
+          startDate: filters.startDate,
+          endDate: filters.endDate,
+          status: filters.status,
         });
 
         if (result) {
@@ -47,17 +72,10 @@ const InvoicePage = () => {
     };
 
     fetchInvoices();
-  }, [filters, page]);
+  }, [filters, page, size]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex items-center space-x-2">
-          <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent border-t-4 rounded-full animate-spin"></div>
-          <div className="text-4xl font-medium text-teal-600">Loading...</div>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   const handleSoftDelete = async (id: string) => {
@@ -82,16 +100,43 @@ const InvoicePage = () => {
         <h2 className="text-3xl font-serif font-bold border-teal-900 border-b-2 mb-4 text-teal-400 tracking-tighter">
           Invoice Management
         </h2>
-        <div className="flex gap-4 pb-8 justify-end">
-          <InvoiceSearchBar setFilters={setFilters} />
-          <button
-            className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-            onClick={() => {
-              router.push(`/dashboard/invoices/create`);
-            }}
-          >
-            + Add New
-          </button>
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex gap-4">
+            <InvoiceSearchBar setFilters={setFilters} />
+            <button
+              className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+              onClick={() => {
+                router.push(`/dashboard/invoices/create`);
+              }}
+            >
+              + Add New
+            </button>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="-mt-8">
+              <label
+                htmlFor="status"
+                className="text-white block text-center mb-1"
+              >
+                Invoice Status:
+              </label>
+              <select
+                value={filters.status || ''}
+                onChange={handleStatusChange}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+              >
+                <option value="">All</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Expired">Expired</option>
+              </select>
+            </div>
+            <DatePicker
+              filters={filters}
+              setFilters={setFilters}
+              router={router}
+            />
+          </div>
         </div>
 
         <div className="overflow-x-auto">

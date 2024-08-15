@@ -36,7 +36,13 @@ const getCustomersByUserIDController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { keyword = '', page = 1, size = 5 } = req.query as IFilterCustomer;
+    const {
+      keyword = '',
+      page = 1,
+      size = 5,
+      type = '',
+      paymentMethod = '',
+    } = req.query as IFilterCustomer;
 
     const { userId } = req.params;
 
@@ -47,9 +53,20 @@ const getCustomersByUserIDController = async (
       where: {
         userId: userId,
         deletedAt: null,
-        name: {
-          contains: keyword,
-        },
+        OR: [
+          {
+            name: {
+              contains: keyword,
+            },
+          },
+          {
+            customerEmail: {
+              contains: keyword,
+            },
+          },
+        ],
+        type: type ? type : undefined,
+        paymentMethod: paymentMethod ? paymentMethod : undefined,
       },
       orderBy: {
         name: 'asc',
@@ -65,9 +82,20 @@ const getCustomersByUserIDController = async (
       where: {
         userId: userId,
         deletedAt: null,
-        name: {
-          contains: keyword,
-        },
+        OR: [
+          {
+            name: {
+              contains: keyword,
+            },
+          },
+          {
+            customerEmail: {
+              contains: keyword,
+            },
+          },
+        ],
+        type: type ? type : undefined,
+        paymentMethod: paymentMethod ? paymentMethod : undefined,
       },
     });
     const count = data._count.id;

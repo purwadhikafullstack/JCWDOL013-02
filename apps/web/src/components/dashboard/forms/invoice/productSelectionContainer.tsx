@@ -1,37 +1,52 @@
-import React, { useState, ChangeEvent } from 'react';
-import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
-import { TransitionLink } from '@/components/utils/transitionLink';
+import React, { ChangeEvent } from 'react';
 import SelectProduct from './selectProduct';
+import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
+type ProductSelectionContainerProps = {
+  products: { id: string; name: string; price: number }[];
+  onProductChange: (
+    products: { itemId: string; quantity: number; price: number }[],
+  ) => void;
 };
 
-const ProductSelectionContainer = ({ products }: { products: Product[] }) => {
-  const [selectedProducts, setSelectedProducts] = useState([
-    { formData: '', formDataQuantity: 1 },
+const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
+  products,
+  onProductChange,
+}) => {
+  const [selectedProducts, setSelectedProducts] = React.useState([
+    { itemId: '', quantity: 1, price: 0 },
   ]);
 
   const handleChange =
     (index: number) => (event: ChangeEvent<HTMLSelectElement>) => {
       const updatedProducts = [...selectedProducts];
-      updatedProducts[index].formData = event.target.value;
-      setSelectedProducts(updatedProducts);
+      const selectedProduct = products.find(
+        (product) => product.id === event.target.value,
+      );
+
+      if (selectedProduct) {
+        updatedProducts[index] = {
+          itemId: selectedProduct.id,
+          quantity: updatedProducts[index].quantity,
+          price: selectedProduct.price,
+        };
+        setSelectedProducts(updatedProducts);
+        onProductChange(updatedProducts); // Pass the entire array of updated products
+      }
     };
 
   const handleChangeQuantity =
     (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
       const updatedProducts = [...selectedProducts];
-      updatedProducts[index].formDataQuantity = Number(event.target.value);
+      updatedProducts[index].quantity = Number(event.target.value);
       setSelectedProducts(updatedProducts);
+      onProductChange(updatedProducts); // Pass the entire array of updated products
     };
 
   const addProductSelection = () => {
     setSelectedProducts([
       ...selectedProducts,
-      { formData: '', formDataQuantity: 1 },
+      { itemId: '', quantity: 1, price: 0 },
     ]);
   };
 
@@ -39,6 +54,7 @@ const ProductSelectionContainer = ({ products }: { products: Product[] }) => {
     const updatedProducts = [...selectedProducts];
     updatedProducts.splice(index, 1);
     setSelectedProducts(updatedProducts);
+    onProductChange(updatedProducts); // Pass the entire array of updated products
   };
 
   return (
@@ -46,13 +62,13 @@ const ProductSelectionContainer = ({ products }: { products: Product[] }) => {
       {selectedProducts.map((product, index) => (
         <div key={index} className="flex items-center gap-4">
           <SelectProduct
-            formData={product.formData}
+            formDataItemId={product.itemId}
             handleChange={handleChange(index)}
             products={products}
-            formDataQuantity={product.formDataQuantity}
+            formDataQuantity={product.quantity}
             handleChangeQuantity={handleChangeQuantity(index)}
           />
-          {index > 0 && ( // Hide delete button for the first component
+          {index > 0 && (
             <button
               onClick={() => removeProductSelection(index)}
               className="text-red-500 hover:text-red-700 mt-8"
@@ -62,13 +78,7 @@ const ProductSelectionContainer = ({ products }: { products: Product[] }) => {
           )}
         </div>
       ))}
-
       <div className="flex items-center justify-start mt-2 gap-4">
-        <TransitionLink href="/dashboard/products/create" className="">
-          <button className="text-white p-1 text-sm bg-blue-500 rounded-md">
-            Create new Product
-          </button>
-        </TransitionLink>
         <button
           onClick={addProductSelection}
           className="flex items-center gap-2 bg-green-800 px-2 p-1 rounded-full"

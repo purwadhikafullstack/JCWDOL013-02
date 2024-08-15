@@ -16,10 +16,30 @@ const ProductsPage = () => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [filters, setFilters] = useState<{ keyword: string; page: number }>({
+  const [filters, setFilters] = useState<{
+    keyword: string;
+    page: number;
+    startDate: string;
+    endDate: string;
+    status: string;
+    type: string;
+    paymentMethod: string;
+  }>({
     keyword: '',
     page: 1,
+    startDate: '',
+    endDate: '',
+    status: '',
+    type: '',
+    paymentMethod: '',
   });
+
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilters((prev) => ({
+      ...prev,
+      type: e.target.value,
+    }));
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,6 +49,7 @@ const ProductsPage = () => {
           page,
           size,
           keyword: filters.keyword,
+          type: filters.type,
         });
 
         if (result) {
@@ -47,7 +68,7 @@ const ProductsPage = () => {
     };
 
     fetchProducts();
-  }, [filters, page]);
+  }, [filters, page, size]);
 
   if (loading) {
     return (
@@ -82,18 +103,37 @@ const ProductsPage = () => {
         <h2 className="text-3xl font-serif font-bold border-teal-900 border-b-2 mb-4 text-teal-400 tracking-tighter">
           Product & Service Management
         </h2>
-        <div className="flex gap-4 pb-8 justify-end">
-          <CustomerSearchBar setFilters={setFilters} />
-          <button
-            className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
-            onClick={() => {
-              router.push(`/dashboard/products/create`);
-            }}
-          >
-            + Add New
-          </button>
+        <div className="flex justify-between">
+          <div className="flex gap-4 pb-8 justify-start">
+            <CustomerSearchBar setFilters={setFilters} />
+            <button
+              className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+              onClick={() => {
+                router.push(`/dashboard/products/create`);
+              }}
+            >
+              + Add New
+            </button>
+          </div>
+          <div className="-mt-2 justify-center p-5">
+            <label htmlFor="type" className="text-white mr-3 mb-1">
+              Product Type:
+            </label>
+            <select
+              value={filters.type || ''}
+              onChange={handleTypeChange}
+              className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+            >
+              <option value="">All</option>
+              <option value="cm">cm</option>
+              <option value="mm">mm</option>
+              <option value="ml">ml</option>
+              <option value="lt">lt</option>
+              <option value="kg">kg</option>
+              <option value="kg">hr</option>
+            </select>
+          </div>
         </div>
-
         <div className="overflow-x-auto">
           <table className="min-w-full text-left border border-collapse table-auto">
             <thead className="bg-gray-100">

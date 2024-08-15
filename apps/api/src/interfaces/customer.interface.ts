@@ -16,6 +16,8 @@ export interface IFilterCustomer {
   keyword?: string;
   page?: number;
   size?: number;
+  type?: string;
+  paymentMethod?: string;
 }
 
 export interface IResultCustomer {

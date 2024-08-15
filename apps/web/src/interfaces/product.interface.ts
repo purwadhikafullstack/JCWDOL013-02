@@ -11,6 +11,7 @@ export interface IFilterProduct {
   page?: number;
   size?: number;
   userId?: string;
+  type?: string;
 }
 
 export interface IResultProduct {

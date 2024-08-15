@@ -1,27 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 type TotalPrice = {
   formDataTax: number;
-  formDataItemId: string;
   handleChangeTax: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  formDataQuantity: number;
   products: { id: string; name: string; price: number }[];
+  onTotalPriceChange: (totalPrice: number) => void;
 };
 
 const TotalPrice = ({
   formDataTax,
   handleChangeTax,
-  formDataItemId,
-  formDataQuantity,
   products,
+  onTotalPriceChange,
 }: TotalPrice) => {
   const calculateSummary = () => {
     const selectedProduct = products.find(
-      (product) => product.id === formDataItemId,
+      (product) => product.id === products[0].id,
     );
     if (!selectedProduct) return { itemPrice: 0, taxAmount: 0, totalPrice: 0 };
 
-    const itemPrice = selectedProduct.price * formDataQuantity;
+    const itemPrice = selectedProduct.price * products.length;
     const taxAmount = (formDataTax / 100) * itemPrice;
     const totalPrice = itemPrice + taxAmount;
 

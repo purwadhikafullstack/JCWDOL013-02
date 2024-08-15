@@ -1,9 +1,12 @@
+'use client';
+
 import React from 'react';
-import BentoBox from './components/bentoBox/bentoBox';
-import BentoBoxLarge from './components/bentoBox/bentoBoxLarge';
+import BentoBox from '../../components/dashboard/bentoBox/bentoBox';
+import BentoBoxLarge from '../../components/dashboard/bentoBox/bentoBoxLarge';
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia';
 import { FaPersonCirclePlus } from 'react-icons/fa6';
 import { AiOutlineShopping } from 'react-icons/ai';
+import { FaFileInvoice } from 'react-icons/fa';
 
 const page = () => {
   return (
@@ -49,12 +52,12 @@ const page = () => {
           }
         />
         <BentoBoxLarge
-          title="Better than dark"
-          description="Brief description of the fourth box."
+          title="Pending Invoices"
+          description="Quick catch up on your pending invoices."
           icon={
-            <svg className="w-12 h-12 text-gray-500" viewBox="0 0 24 24">
+            <svg className="w-20 h-20 text-gray-500" viewBox="0 0 24 24">
               {' '}
-              {/* Your icon here */}
+              <FaFileInvoice color="yellow" />
             </svg>
           }
         />

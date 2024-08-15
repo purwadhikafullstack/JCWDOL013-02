@@ -48,7 +48,14 @@ const getInvoicesByUserIDController = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { keyword = '', page = 1, size = 5 } = req.query as IFilterInvoice;
+    const {
+      keyword = '',
+      page = 1,
+      size = 5,
+      startDate,
+      endDate,
+      status,
+    } = req.query as IFilterInvoice;
 
     const { userId } = req.params;
 
@@ -57,6 +64,19 @@ const getInvoicesByUserIDController = async (
       return;
     }
 
+    const dateFilter: any = {};
+    if (startDate && endDate && startDate === endDate) {
+      const exactDate = new Date(startDate as string);
+      dateFilter.gte = exactDate;
+      dateFilter.lte = new Date(exactDate.getTime() + 24 * 60 * 60 * 1000); // end of the day
+    } else {
+      if (startDate) {
+        dateFilter.gte = new Date(startDate as string);
+      }
+      if (endDate) {
+        dateFilter.lte = new Date(endDate as string);
+      }
+    }
     const invoices = await prisma.invoice.findMany({
       where: {
         userId: userId,
@@ -64,6 +84,8 @@ const getInvoicesByUserIDController = async (
         invoiceNumber: {
           contains: keyword,
         },
+        invoiceDate: dateFilter,
+        status: status ? status : undefined,
       },
       orderBy: {
         invoiceDate: 'asc',
@@ -82,6 +104,8 @@ const getInvoicesByUserIDController = async (
         invoiceNumber: {
           contains: keyword,
         },
+        invoiceDate: dateFilter,
+        status: status ? status : undefined,
       },
     });
 

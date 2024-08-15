@@ -23,6 +23,8 @@ export const createCustomer = async (formData: any) => {
 export const getCustomersByUserID = async ({
   keyword = '',
   page = 1,
+  type = '',
+  paymentMethod = '',
 }: IFilterCustomer) => {
   try {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -33,6 +35,8 @@ export const getCustomersByUserID = async ({
         params: {
           keyword,
           page,
+          type,
+          paymentMethod,
         },
       },
     );

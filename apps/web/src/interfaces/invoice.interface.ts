@@ -18,6 +18,9 @@ export interface IFilterInvoice {
   keyword?: string;
   page?: number;
   size?: number;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
 }
 
 export interface IResultInvoice {

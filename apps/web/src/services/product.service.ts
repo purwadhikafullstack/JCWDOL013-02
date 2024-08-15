@@ -20,6 +20,7 @@ export const createProduct = async (formData: any) => {
 export const getProductsByUserID = async ({
   keyword = '',
   page = 1,
+  type = '',
 }: IFilterProduct) => {
   try {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -28,6 +29,7 @@ export const getProductsByUserID = async ({
       params: {
         keyword,
         page,
+        type,
       },
     });
 

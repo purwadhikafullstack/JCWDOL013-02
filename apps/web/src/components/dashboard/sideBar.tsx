@@ -18,8 +18,10 @@ const SideBar = () => {
         />
       ))}
       <div className="text-center font-light cursor-default mt-72">
-        <p className="">© Invoeasy, v.0.0.1</p>
-        2024 All Rights Reserved
+        <p className="font-bold">© invoeasy, v.0.0.1</p>
+        <span className="border-b-2 border-teal-950">
+          2024 All Rights Reserved
+        </span>
       </div>
     </div>
   );

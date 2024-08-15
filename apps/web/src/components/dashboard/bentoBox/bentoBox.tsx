@@ -11,7 +11,7 @@ interface BentoBoxProps {
 const BentoBox = ({ title, description, icon, href }: BentoBoxProps) => {
   return (
     <Link href={href}>
-      <div className="flex flex-col items-center  bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 rounded-lg p-8 shadow-md hover:scale-95">
+      <div className="flex flex-col items-center  bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 rounded-lg p-8 hover:scale-95 shadow-xl hover:shadow-teal-500">
         <div className="w-24 h-24 rounded-full flex items-center justify-center bg-teal-800">
           {icon}
         </div>

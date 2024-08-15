@@ -6,11 +6,13 @@ import { getProductsByUserID } from '@/services/product.service';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import CustomerSearch from '../../components/forms/invoice/customerSearch';
-import Dates from '../../components/forms/invoice/dates';
-import TermsCondition from '../../components/forms/invoice/termsCondition';
-import ProductSelectionContainer from '../../components/forms/invoice/productSelectionContainer';
-import TotalPrice from '../../components/forms/invoice/totalPrice';
+import CustomerSearch from '../../../../components/dashboard/forms/invoice/customerSearch';
+import Dates from '../../../../components/dashboard/forms/invoice/dates';
+import TermsCondition from '../../../../components/dashboard/forms/invoice/termsCondition';
+import ProductSelectionContainer from '../../../../components/dashboard/forms/invoice/productSelectionContainer';
+import TotalPrice from '../../../../components/dashboard/forms/invoice/totalPrice';
+import { Loading } from '../../../../components/dashboard/loading/loadData';
+import SelectProduct from '../../../../components/dashboard/forms/invoice/selectProduct';
 
 const CreateInvoicePage = () => {
   const router = useRouter();
@@ -22,11 +24,10 @@ const CreateInvoicePage = () => {
     invoiceNumber: '',
     dueDate: '',
     customerId: '',
-    itemId: '',
     termsCondition: '',
-    quantity: 1,
     totalPrice: 0,
     tax: 0,
+    products: [{ itemId: '', quantity: 1, price: 0 }],
   });
 
   type ChangeEvent =
@@ -92,13 +93,32 @@ const CreateInvoicePage = () => {
   };
 
   const calculateTotalAmount = () => {
-    const selectedProduct = products.find(
-      (product) => product.id === formData.itemId,
-    );
-    if (selectedProduct) {
-      return selectedProduct.price * formData.quantity;
-    }
-    return 0;
+    const totalItemPrice = formData.products.reduce((acc, product) => {
+      const selectedProduct = products.find((p) => p.id === product.itemId);
+      if (selectedProduct) {
+        return acc + selectedProduct.price * product.quantity;
+      }
+      return acc;
+    }, 0);
+
+    const taxAmount = (formData.tax / 100) * totalItemPrice;
+    return totalItemPrice + taxAmount;
+  };
+
+  const handleTotalPriceChange = (totalPrice: number) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      totalPrice,
+    }));
+  };
+
+  const handleProductChange = (
+    updatedProducts: { itemId: string; quantity: number; price: number }[],
+  ) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      products: updatedProducts,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -116,7 +136,6 @@ const CreateInvoicePage = () => {
         userId,
         dueDate: isoDate,
         totalPrice: calculateTotalAmount(),
-        quantity: Number(formData.quantity),
         tax: Number(formData.tax),
       };
 
@@ -131,14 +150,7 @@ const CreateInvoicePage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex items-center space-x-2">
-          <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent border-t-4 rounded-full animate-spin"></div>
-          <div className="text-4xl font-medium text-teal-600">Loading...</div>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -163,7 +175,10 @@ const CreateInvoicePage = () => {
               </div>
               <div className="form-control">
                 <div className="flex justify-between space-x-4">
-                  <ProductSelectionContainer products={products} />
+                  <ProductSelectionContainer
+                    products={products}
+                    onProductChange={handleProductChange}
+                  />
                 </div>
               </div>
               <div className="form-control flex">
@@ -174,9 +189,8 @@ const CreateInvoicePage = () => {
                 <TotalPrice
                   formDataTax={formData.tax}
                   handleChangeTax={handleChange}
-                  formDataItemId={formData.itemId}
-                  formDataQuantity={formData.quantity}
                   products={products}
+                  onTotalPriceChange={handleTotalPriceChange}
                 />
               </div>
               <div className="flex space-x-4 justify-center">

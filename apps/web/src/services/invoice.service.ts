@@ -20,6 +20,9 @@ export const createInvoice = async (formData: any) => {
 export const getInvoicesByUserID = async ({
   keyword = '',
   page = 1,
+  startDate = '',
+  endDate = '',
+  status = '',
 }: IFilterInvoice) => {
   try {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -28,6 +31,9 @@ export const getInvoicesByUserID = async ({
       params: {
         keyword,
         page,
+        startDate,
+        endDate,
+        status,
       },
     });
 
