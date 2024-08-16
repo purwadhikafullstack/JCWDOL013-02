@@ -17,14 +17,18 @@ const createInvoiceController = async (
     const params = req.body;
 
     const customer = await prisma.customer.findUnique({
-      where: { id: params.customerId },
+      where: {
+        id: params.customerId,
+        name: params.customerName,
+        address: params.address,
+      },
     });
 
     const data = await createInvoiceAction({
       ...params,
     });
 
-    const pdfPath = generateInvoicePDF(data);
+    const pdfPath = generateInvoicePDF(data, customer);
     const email = await sendInvoiceEmail({
       to: customer?.customerEmail ?? '',
       subject: 'Invoeasy',
@@ -68,7 +72,7 @@ const getInvoicesByUserIDController = async (
     if (startDate && endDate && startDate === endDate) {
       const exactDate = new Date(startDate as string);
       dateFilter.gte = exactDate;
-      dateFilter.lte = new Date(exactDate.getTime() + 24 * 60 * 60 * 1000); // end of the day
+      dateFilter.lte = new Date(exactDate.getTime() + 24 * 60 * 60 * 1000);
     } else {
       if (startDate) {
         dateFilter.gte = new Date(startDate as string);

@@ -130,7 +130,7 @@ const ProductsPage = () => {
               <option value="ml">ml</option>
               <option value="lt">lt</option>
               <option value="kg">kg</option>
-              <option value="kg">hr</option>
+              <option value="hr">hr</option>
             </select>
           </div>
         </div>

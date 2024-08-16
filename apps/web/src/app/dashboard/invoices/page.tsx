@@ -198,14 +198,19 @@ const InvoicePage = () => {
                       </span>
                     </td>
                   )}
-                  <td className="px-4 py-2 border text-gray-100 text-center">
-                    {'Rp. ' +
-                      invoice.totalPrice.toLocaleString('id-ID', {
-                        style: 'decimal',
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                  </td>
+                  {invoice.totalPrice === null ? (
+                    <td>No Invoice Amount</td>
+                  ) : (
+                    <td className="px-4 py-2 border text-gray-100 text-center">
+                      {'Rp. ' +
+                        invoice.totalPrice.toLocaleString('id-ID', {
+                          style: 'decimal',
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                    </td>
+                  )}
+
                   <td className="px-4 py-2 border text-center">
                     <button
                       onClick={() => handleSoftDelete(invoice.id)}

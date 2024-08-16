@@ -1,4 +1,4 @@
-import { Invoice } from '@prisma/client';
+import { Invoice, ProductItem } from '@prisma/client';
 
 export interface IInvoice {
   id?: string;
@@ -16,6 +16,7 @@ export interface IInvoice {
   customerEmail: string;
   customerName: string;
   customerId: string;
+  products: ProductItem[];
 }
 
 export interface IFilterInvoice {

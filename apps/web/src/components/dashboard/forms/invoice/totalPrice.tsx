@@ -3,8 +3,9 @@ import React, { useEffect } from 'react';
 type TotalPrice = {
   formDataTax: number;
   handleChangeTax: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  products: { id: string; name: string; price: number }[];
+  products: { id: string; name: string; price: number; quantity: number }[];
   onTotalPriceChange: (totalPrice: number) => void;
+  onQuantityChange: (itemId: string, newQuantity: number) => void;
 };
 
 const TotalPrice = ({
@@ -12,19 +13,28 @@ const TotalPrice = ({
   handleChangeTax,
   products,
   onTotalPriceChange,
+  onQuantityChange,
 }: TotalPrice) => {
   const calculateSummary = () => {
-    const selectedProduct = products.find(
-      (product) => product.id === products[0].id,
+    const itemPrice = products.reduce(
+      (acc, product) => acc + product.price * (product.quantity || 0),
+      0,
     );
-    if (!selectedProduct) return { itemPrice: 0, taxAmount: 0, totalPrice: 0 };
 
-    const itemPrice = selectedProduct.price * products.length;
     const taxAmount = (formDataTax / 100) * itemPrice;
     const totalPrice = itemPrice + taxAmount;
 
-    return { itemPrice, taxAmount, totalPrice };
+    return {
+      itemPrice,
+      taxAmount: isNaN(taxAmount) ? 0 : taxAmount,
+      totalPrice: isNaN(totalPrice) ? 0 : totalPrice,
+    };
   };
+
+  useEffect(() => {
+    const summary = calculateSummary();
+    onTotalPriceChange(summary.totalPrice);
+  }, [products, formDataTax]);
 
   const summary = calculateSummary();
   return (
@@ -57,7 +67,7 @@ const TotalPrice = ({
 
           <div className="mt-10 text-end">
             <p className="text-md text-gray-50 border-b-2 mb-5">
-              <strong>Tax Amount ({formDataTax}%):</strong>{' '}
+              <strong>Tax Amount ({formDataTax || 0}%):</strong>{' '}
               {'Rp. ' +
                 summary.taxAmount.toLocaleString('id-ID', {
                   style: 'decimal',

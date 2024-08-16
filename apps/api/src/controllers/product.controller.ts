@@ -71,7 +71,7 @@ const getProductsByUserIDController = async (
         name: {
           contains: keyword,
         },
-        type: type,
+        type: type ? type : undefined,
       },
     });
     const count = data._count.id;

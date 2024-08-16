@@ -66,8 +66,18 @@ model Invoice {
   userId          String          @map(name: "user_id")
   categoryItem    CategoryItem[]
   deletedAt       DateTime?
+  products        ProductItem[]
 
 @@map(name: "invoice")  
+}
+
+model ProductItem {
+  id              String          @id @default(uuid())
+  itemId          String
+  quantity        Float
+  price           Float
+  name            String?
+  invoice         Invoice[]
 }
 
 model CategoryItem {

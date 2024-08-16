@@ -83,6 +83,10 @@ const CreateInvoicePage = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === 'tax') {
+      handleTotalPriceChange(calculateTotalAmount());
+    }
   };
 
   const handleCustomerSelect = (customerId: string) => {
@@ -119,6 +123,17 @@ const CreateInvoicePage = () => {
       ...prevData,
       products: updatedProducts,
     }));
+
+    handleTotalPriceChange(calculateTotalAmount());
+  };
+
+  const handleQuantityChange = (itemId: string, newQuantity: number) => {
+    const updatedProducts = formData.products.map((product) =>
+      product.itemId === itemId
+        ? { ...product, quantity: newQuantity }
+        : product,
+    );
+    handleProductChange(updatedProducts);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -178,6 +193,7 @@ const CreateInvoicePage = () => {
                   <ProductSelectionContainer
                     products={products}
                     onProductChange={handleProductChange}
+                    onQuantityChange={handleQuantityChange}
                   />
                 </div>
               </div>
@@ -188,9 +204,22 @@ const CreateInvoicePage = () => {
                 />
                 <TotalPrice
                   formDataTax={formData.tax}
-                  handleChangeTax={handleChange}
-                  products={products}
+                  handleChangeTax={(e) =>
+                    setFormData({ ...formData, tax: Number(e.target.value) })
+                  }
+                  products={formData.products.map((product) => ({
+                    ...products.find((p) => p.id === product.itemId),
+                    quantity: product.quantity,
+                  }))}
                   onTotalPriceChange={handleTotalPriceChange}
+                  onQuantityChange={(itemId, newQuantity) => {
+                    const updatedProducts = formData.products.map((product) =>
+                      product.itemId === itemId
+                        ? { ...product, quantity: newQuantity }
+                        : product,
+                    );
+                    handleProductChange(updatedProducts);
+                  }}
                 />
               </div>
               <div className="flex space-x-4 justify-center">

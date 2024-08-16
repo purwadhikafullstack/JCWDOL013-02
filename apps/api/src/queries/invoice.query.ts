@@ -14,6 +14,17 @@ const createInvoiceQuery = async (
           data: {
             ...invoiceData,
             userId: userId,
+            products: {
+              create: invoiceData.products.map((product) => ({
+                itemId: product.itemId,
+                quantity: product.quantity,
+                price: product.price,
+                name: product.name,
+              })),
+            },
+          },
+          include: {
+            products: true,
           },
         });
 

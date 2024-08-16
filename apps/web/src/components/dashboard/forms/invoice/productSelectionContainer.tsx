@@ -1,20 +1,28 @@
 import React, { ChangeEvent } from 'react';
 import SelectProduct from './selectProduct';
 import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
+import { TransitionLink } from '@/components/utils/transitionLink';
 
 type ProductSelectionContainerProps = {
-  products: { id: string; name: string; price: number }[];
+  products: { id: string; name: string; price: number; quantity: number }[];
   onProductChange: (
-    products: { itemId: string; quantity: number; price: number }[],
+    products: {
+      name: string;
+      itemId: string;
+      quantity: number;
+      price: number;
+    }[],
   ) => void;
+  onQuantityChange: (itemId: string, newQuantity: number) => void;
 };
 
 const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
   products,
   onProductChange,
+  onQuantityChange,
 }) => {
   const [selectedProducts, setSelectedProducts] = React.useState([
-    { itemId: '', quantity: 1, price: 0 },
+    { name: '', itemId: '', quantity: 1, price: 0 },
   ]);
 
   const handleChange =
@@ -26,6 +34,7 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
 
       if (selectedProduct) {
         updatedProducts[index] = {
+          name: selectedProduct.name,
           itemId: selectedProduct.id,
           quantity: updatedProducts[index].quantity,
           price: selectedProduct.price,
@@ -41,12 +50,16 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
       updatedProducts[index].quantity = Number(event.target.value);
       setSelectedProducts(updatedProducts);
       onProductChange(updatedProducts); // Pass the entire array of updated products
+      onQuantityChange(
+        updatedProducts[index].itemId,
+        updatedProducts[index].quantity,
+      );
     };
 
   const addProductSelection = () => {
     setSelectedProducts([
       ...selectedProducts,
-      { itemId: '', quantity: 1, price: 0 },
+      { name: '', itemId: '', quantity: 1, price: 0 },
     ]);
   };
 
@@ -79,6 +92,13 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
         </div>
       ))}
       <div className="flex items-center justify-start mt-2 gap-4">
+        <div className="flex items-center justify-start">
+          <TransitionLink href="/dashboard/products/create" className="">
+            <button className="text-white p-1 text-sm bg-blue-500 rounded-md">
+              Create new Product
+            </button>
+          </TransitionLink>
+        </div>
         <button
           onClick={addProductSelection}
           className="flex items-center gap-2 bg-green-800 px-2 p-1 rounded-full"
