@@ -16,6 +16,7 @@ export interface IInvoice {
   customerEmail: string;
   customerName: string;
   customerId: string;
+  scheduleDate?: Date;
   products: ProductItem[];
 }
 

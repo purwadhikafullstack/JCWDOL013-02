@@ -61,6 +61,7 @@ const SelectProduct = ({
           <input
             name="quantity"
             type="number"
+            id="quantity"
             placeholder="Quantity"
             min="1"
             value={formDataQuantity}

@@ -21,13 +21,15 @@ const CustomerSearchBar: React.FC<CustomerSearchBarProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const handleSearch = useCallback(
-    debounce((keyword: string) => {
-      setFilters((filters) => ({
-        ...filters,
-        keyword,
-        page: 1,
-      }));
-    }, 500),
+    (keyword: string) => {
+      debounce(() => {
+        setFilters((filters) => ({
+          ...filters,
+          keyword,
+          page: 1,
+        }));
+      }, 500)();
+    },
     [setFilters],
   );
 

@@ -53,6 +53,7 @@ model Invoice {
   invoiceNumber   String?         @map(name: "invoice_number")
   status          String          @default("Pending")
   quantity        Float?          @default(1)
+  customerName    String?
   totalPrice      Float?
   tax             Float?        
   invoiceDate     DateTime        @default(now()) @map(name: "invoice_date")
@@ -66,6 +67,9 @@ model Invoice {
   userId          String          @map(name: "user_id")
   categoryItem    CategoryItem[]
   deletedAt       DateTime?
+  scheduleDate    DateTime?
+  recurrenceType  String?
+  nextInvoiceDate DateTime?   
   products        ProductItem[]
 
 @@map(name: "invoice")  

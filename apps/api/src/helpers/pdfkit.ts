@@ -24,20 +24,18 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
 
   doc.pipe(fs.createWriteStream(filePath));
 
-  // Add Logo as Watermark
   doc
-    .opacity(0) // Adjust opacity to make it look like a watermark
-    .rotate(-45, { origin: [300, 400] }) // Adjust rotation and origin
-    .image(logoPath, 100, 250, { width: 400 }) // Adjust positioning and size
-    .rotate(45, { origin: [300, 400] }) // Reset rotation
-    .opacity(1); // Reset opacity to default
+    .opacity(0)
+    .rotate(-45, { origin: [300, 400] })
+    .image(logoPath, 100, 250, { width: 400 })
+    .rotate(45, { origin: [300, 400] })
+    .opacity(1);
 
-  // Header with Title (Aligned to the Left)
   doc.rect(50, 30, 520, 100).fill('#f4f4f4').stroke();
   doc
     .fontSize(24)
     .fillColor('#333')
-    .text('INVOICE', 60, 40, { align: 'center' }) // Aligned to the left
+    .text('INVOICE', 60, 40, { align: 'center' })
     .fontSize(12)
     .text(`Invoice Number: ${invoice.invoiceNumber}`, 60, 70, { align: 'left' })
     .text(
@@ -54,7 +52,6 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
     )
     .moveDown(1);
 
-  // Customer and Invoice Details
   doc
     .fontSize(12)
     .fillColor('#333')
@@ -64,26 +61,23 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
     .font('Helvetica')
     .text(customer?.address, 60, 170, { align: 'left' });
 
-  // Invoice Status
   doc
     .fontSize(12)
     .font('Helvetica-Bold')
     .fillColor('#333')
     .text(`Status: ${invoice.status.toUpperCase()}`, 60, 140, {
       align: 'right',
-    }); // Add invoice status
+    });
 
-  // Table Header
   doc.rect(50, 220, 520, 20).fill('#f4f4f4').stroke();
   doc
     .fillColor('#333')
     .font('Helvetica-Bold')
     .text('Description', 60, 225, { align: 'left' })
-    .text('Quantity', 190, 225, { align: 'center' }) // Adjusted position for Quantity
-    .text('Price', 345, 225, { align: 'right' }) // Moved Price slightly to the right
+    .text('Quantity', 190, 225, { align: 'center' })
+    .text('Price', 345, 225, { align: 'right' })
     .moveDown(0.5);
 
-  // Table Rows and Subtotal Calculation
   let y = 250;
   let subtotal = 0;
 
@@ -96,19 +90,18 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
         .fillColor('#333')
         .font('Helvetica')
         .text(item.name, 60, y, { align: 'left' })
-        .text(item.quantity.toString(), 190, y, { align: 'center' }) // Adjusted position for Quantity
+        .text(item.quantity.toString(), 190, y, { align: 'center' })
         .text(
           `Rp. ${item.price.toLocaleString('id-ID', { minimumFractionDigits: 2 })}`,
           345,
           y,
           { align: 'right' },
-        ); // Moved Price slightly to the right
+        );
 
       y += 20;
     });
   }
 
-  // Total Amount Section
   const taxAmount = (invoice.tax / 100) * subtotal;
   const total = subtotal + taxAmount;
 
@@ -125,21 +118,20 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
       330,
       y + 15,
       { align: 'right' },
-    ) // Moved slightly to the right
+    )
     .text(
       `Tax (${invoice.tax || 0}%): Rp. ${taxAmount.toLocaleString('id-ID', { minimumFractionDigits: 2 })}`,
       330,
       y + 30,
       { align: 'right' },
-    ) // Moved slightly to the right
+    )
     .text(
       `Total Amount: Rp. ${total.toLocaleString('id-ID', { minimumFractionDigits: 2 })}`,
       330,
       y + 45,
       { align: 'right' },
-    ); // Moved slightly to the right
+    );
 
-  // Terms and Conditions Section
   doc
     .fontSize(10)
     .fillColor('#333')
@@ -151,7 +143,6 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
     })
     .moveDown(1);
 
-  // Footer
   doc
     .fontSize(10)
     .fillColor('#333')
@@ -164,34 +155,31 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
     )
     .moveDown(1);
 
-  // Footer Section
   doc
     .fontSize(10)
     .fillColor('#333')
     .font('Helvetica')
-    .text('© Invoeasy', 50, y + 250, { align: 'left' })
-    .text('8282 Howe Springs', 50, y + 265, { align: 'left' })
-    .text('942 Schaden River', 50, y + 280, { align: 'left' })
-    .text('Phone: (123) 456-7890', 50, y + 295, { align: 'left' })
-    .text('Email: cs@invoeasy.com', 50, y + 310, { align: 'left' })
-    .text('Website: www.invoeasy.com', 50, y + 325, { align: 'left' })
-    .text('Company Registration Number: 123456789', 50, y + 340, {
+    .text('© Invoeasy', 50, y + 240, { align: 'left' })
+    .text('8282 Howe Springs', 50, y + 255, { align: 'left' })
+    .text('942 Schaden River', 50, y + 270, { align: 'left' })
+    .text('Phone: (123) 456-7890', 50, y + 285, { align: 'left' })
+    .text('Email: cs@invoeasy.com', 50, y + 300, { align: 'left' })
+    .text('Website: www.invoeasy.com', 50, y + 315, { align: 'left' })
+    .text('Company Registration Number: 123456789', 50, y + 330, {
       align: 'left',
     })
-    .text('VAT Number: GB123456789', 50, y + 355, { align: 'left' })
+    .text('VAT Number: GB123456789', 50, y + 345, { align: 'left' })
     .moveDown(1);
 
-  // Disclaimer
   doc
     .fontSize(9)
     .font('Helvetica-Oblique')
     .text(
       'Terms and conditions apply. This invoice is not valid for tax purposes unless signed by an authorized representative of the company.',
       50,
-      y + 375,
+      y + 365,
       { align: 'left', width: 500 },
     );
-  // Close and save the document
   doc.end();
   return filePath;
 };

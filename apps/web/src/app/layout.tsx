@@ -31,7 +31,7 @@ export default function RootLayout({
               }}
               style={{ textAlign: 'center' }}
               limit={1}
-              autoClose={500}
+              autoClose={800}
               closeButton={false}
               hideProgressBar
             />

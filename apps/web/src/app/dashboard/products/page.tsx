@@ -123,6 +123,7 @@ const ProductsPage = () => {
               value={filters.type || ''}
               onChange={handleTypeChange}
               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+              id="type"
             >
               <option value="">All</option>
               <option value="cm">cm</option>

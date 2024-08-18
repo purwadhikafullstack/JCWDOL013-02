@@ -10,12 +10,9 @@ const SideBar = () => {
         <Logo />
       </div>
       {LinkItems.map((item) => (
-        <NavItems
-          key={item.key}
-          icon={item.icon}
-          href={item.href}
-          children={item.name}
-        />
+        <NavItems key={item.key} icon={item.icon} href={item.href}>
+          {item.name}
+        </NavItems>
       ))}
       <div className="text-center font-light cursor-default mt-72">
         <p className="font-bold border-b-2 border-teal-700">

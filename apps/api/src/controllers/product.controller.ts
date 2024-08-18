@@ -36,7 +36,7 @@ const getProductsByUserIDController = async (
     const {
       keyword = '',
       page = 1,
-      size = 5,
+      size = 10,
       type = '',
     } = req.query as IFilterProduct;
 

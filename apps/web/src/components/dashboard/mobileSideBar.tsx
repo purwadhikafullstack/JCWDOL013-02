@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 type Props = {
@@ -59,8 +60,8 @@ const MobileSideBar = ({ show, setShow }: Props) => {
                 </svg>
               </div>
             </div>
-            <ul aria-orientation="vertical" className=" py-6">
-              <li className="pl-6 cursor-pointer text-white text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
+            <ul id="sideBar" className=" py-6">
+              <li className="pl-6 cursor-pointer text-sm leading-3 tracking-normal pb-4 pt-5 text-indigo-700 focus:text-indigo-700 focus:outline-none">
                 <div className="flex items-center">
                   <div className="w-6 h-6 md:w-8 md:h-8">
                     <svg
@@ -187,10 +188,12 @@ const MobileSideBar = ({ show, setShow }: Props) => {
             <div className="border-t border-gray-300">
               <div className="w-full flex items-center justify-between px-6 pt-1">
                 <div className="flex items-center">
-                  <img
+                  <Image
                     alt="profile-pic"
-                    src="https://tuk-cdn.s3.amazonaws.com/assets/components/boxed_layout/bl_1.png"
+                    src="/assets/svg/avatar.svg"
                     className="w-8 h-8 rounded-md"
+                    width={24}
+                    height={24}
                   />
                   <p className="md:text-xl text-gray-800 text-base leading-4 ml-2">
                     Jane Doe

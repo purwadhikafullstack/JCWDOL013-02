@@ -23,6 +23,7 @@ export default function InnerForm(props: FormikProps<FormValues>) {
             <Field
               name="email"
               type="email"
+              id="email"
               placeholder="Email"
               onChange={handleChange}
               value={values.email}

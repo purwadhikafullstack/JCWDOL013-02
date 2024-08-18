@@ -12,18 +12,20 @@ import TermsCondition from '../../../../components/dashboard/forms/invoice/terms
 import ProductSelectionContainer from '../../../../components/dashboard/forms/invoice/productSelectionContainer';
 import TotalPrice from '../../../../components/dashboard/forms/invoice/totalPrice';
 import { Loading } from '../../../../components/dashboard/loading/loadData';
-import SelectProduct from '../../../../components/dashboard/forms/invoice/selectProduct';
+import { FaSpinner } from 'react-icons/fa';
 
 const CreateInvoicePage = () => {
   const router = useRouter();
   const [customers, setCustomers] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     invoiceNumber: '',
     dueDate: '',
     customerId: '',
+    customerName: '',
     termsCondition: '',
     totalPrice: 0,
     tax: 0,
@@ -44,7 +46,9 @@ const CreateInvoicePage = () => {
       ...prevData,
       invoiceNumber: generateInvoiceNumber(),
     }));
+  }, []);
 
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const storedUser = localStorage.getItem('user');
@@ -89,10 +93,11 @@ const CreateInvoicePage = () => {
     }
   };
 
-  const handleCustomerSelect = (customerId: string) => {
+  const handleCustomerSelect = (customerId: string, customerName: string) => {
     setFormData((prevData) => ({
       ...prevData,
       customerId,
+      customerName: customerName,
     }));
   };
 
@@ -138,6 +143,7 @@ const CreateInvoicePage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const storedUser = localStorage.getItem('user');
@@ -156,11 +162,13 @@ const CreateInvoicePage = () => {
 
       const invoice = await createInvoice(updatedFormData);
       if (!invoice) throw new Error('Create invoice failed!');
-      toast.success('Invoice created successfully');
+      toast.success('Invoice Created & Sended successfully');
       router.push('/dashboard/invoices');
     } catch (err) {
       console.error(err);
       toast.error('Create invoice failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -232,9 +240,14 @@ const CreateInvoicePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="w-full bg-blue-800 text-white py-2 rounded-full hover:bg-teal-700 p-4"
+                  className={`w-full flex justify-center items-center bg-blue-800 text-white py-2 rounded-full hover:bg-teal-700 p-4 ${isLoading ? 'cursor-not-allowed' : ''}`}
+                  disabled={isLoading}
                 >
-                  Create and Send
+                  {isLoading ? (
+                    <FaSpinner size={25} className="animate-spin" />
+                  ) : (
+                    'Create and Send'
+                  )}
                 </button>
               </div>
             </div>

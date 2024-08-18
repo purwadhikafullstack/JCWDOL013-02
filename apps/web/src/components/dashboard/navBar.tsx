@@ -4,6 +4,7 @@ import { FaBell } from 'react-icons/fa';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/lib/features/auth/authSlice';
+import Image from 'next/image';
 
 type Props = {
   show: boolean;
@@ -106,10 +107,12 @@ const NavBar = ({
               {status.isLogin ? (
                 <>
                   <div className="relative">
-                    <img
-                      className="rounded-full h-10 w-10 object-cover"
-                      src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    <Image
+                      className="rounded-full h-10 w-10 object-cover bg-white"
+                      src="/assets/svg/avatar.svg"
                       alt="avatar"
+                      width={40}
+                      height={40}
                     />
                     <div className="w-2 h-2 rounded-full bg-green-400 border border-white absolute inset-0 mb-0 mr-0 m-auto" />
                   </div>
@@ -139,9 +142,7 @@ const NavBar = ({
                   </div>
                 </>
               ) : (
-                <>
-                  <div></div>
-                </>
+                <div></div>
               )}
             </div>
           </div>

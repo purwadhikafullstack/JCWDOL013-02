@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
@@ -61,11 +61,12 @@ const page = () => {
           <form onSubmit={handleSubmit}>
             <div className="space-y-6 w-full rounded-xl p-6 my-6 justify-center">
               <div className="flex items-center space-x-4 justify-center">
-                <label className="flex items-center">
+                <label className="flex items-center" htmlFor="type">
                   <input
                     type="radio"
                     name="type"
                     value="Individual"
+                    id="type"
                     className="form-radio text-blue-600 h-4 w-4"
                     checked={formData.type === 'Individual'}
                     onChange={handleChange}
@@ -73,12 +74,13 @@ const page = () => {
                   <span className="mx-3 text-gray-50">Individual</span>
                 </label>
 
-                <label className="flex items-center">
+                <label className="flex items-center" htmlFor="type">
                   <input
                     type="radio"
                     name="type"
                     value="Business"
                     className="form-radio text-blue-600 h-4 w-4"
+                    id="type"
                     onChange={handleChange}
                     checked={formData.type === 'Business'}
                   />
@@ -93,6 +95,7 @@ const page = () => {
                   Name :
                 </label>
                 <input
+                  id="name"
                   name="name"
                   placeholder="Name"
                   type="text"
@@ -112,6 +115,7 @@ const page = () => {
                 <input
                   name="customerEmail"
                   placeholder="Email"
+                  id="customerEmail"
                   type="text"
                   value={formData.customerEmail}
                   onChange={handleChange}
@@ -129,6 +133,7 @@ const page = () => {
                 <input
                   name="address"
                   placeholder="Address"
+                  id="address"
                   type="text"
                   value={formData.address}
                   onChange={handleChange}
@@ -145,6 +150,7 @@ const page = () => {
                 </label>
                 <select
                   name="paymentMethod"
+                  id="paymentMethod"
                   value={formData.paymentMethod}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-5 bg-slate-500 text-white"
@@ -183,4 +189,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

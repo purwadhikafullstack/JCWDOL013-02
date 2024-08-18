@@ -8,7 +8,7 @@ import { FaPersonCirclePlus } from 'react-icons/fa6';
 import { AiOutlineShopping } from 'react-icons/ai';
 import { FaFileInvoice } from 'react-icons/fa';
 
-const page = () => {
+const Page = () => {
   return (
     <div className="container mx-auto px-20 py-10">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -66,4 +66,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

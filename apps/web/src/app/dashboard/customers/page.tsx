@@ -54,7 +54,6 @@ const CustomersPage = () => {
         setLoading(true);
         const result = await getCustomersByUserID({
           page,
-          size,
           keyword: filters.keyword,
           type: filters.type,
           paymentMethod: filters.paymentMethod,
@@ -131,6 +130,7 @@ const CustomersPage = () => {
               value={filters.type || ''}
               onChange={handleTypeChange}
               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+              id="type"
             >
               <option value="">All</option>
               <option value="Individual">Individual</option>
@@ -145,6 +145,7 @@ const CustomersPage = () => {
               value={filters.paymentMethod || ''}
               onChange={handlePaymentChange}
               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+              id="paymentMethod"
             >
               <option value="">All</option>
               <option value="Cash">Cash</option>

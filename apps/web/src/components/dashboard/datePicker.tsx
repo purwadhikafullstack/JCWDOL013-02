@@ -34,6 +34,7 @@ const DatePicker = ({ setFilters, router, filters }: Props) => {
         </label>
         <input
           type="date"
+          id="startDate"
           value={filters.startDate}
           onChange={(e) =>
             setFilters((prev) => ({
@@ -51,6 +52,7 @@ const DatePicker = ({ setFilters, router, filters }: Props) => {
         </label>
         <input
           type="date"
+          id="endDate"
           value={filters.endDate}
           onChange={(e) =>
             setFilters((prev) => ({

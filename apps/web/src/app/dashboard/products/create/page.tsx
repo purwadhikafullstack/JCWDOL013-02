@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
@@ -68,6 +68,7 @@ const page = () => {
                 <input
                   name="name"
                   placeholder="Name"
+                  id="name"
                   type="text"
                   value={formData.name}
                   onChange={handleChange}
@@ -111,6 +112,7 @@ const page = () => {
                   name="price"
                   placeholder="Price"
                   type="number"
+                  id="price"
                   value={formData.price}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm p-3 bg-slate-500 text-white"
@@ -141,4 +143,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

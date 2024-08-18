@@ -1,19 +1,23 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getInvoicesByUserID } from '@/services/invoice.service'; // Adjust the service import as needed
+import { getInvoicesByUserID, resendInvoice } from '@/services/invoice.service'; // Adjust the service import as needed
 import { useRouter } from 'next/navigation';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
 import { IInvoice } from '@/interfaces/invoice.interface'; // Define IInvoice interface
 import InvoiceSearchBar from '@/components/searchBar/searchBar'; // Adjust as needed
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaRegCalendarAlt, FaRegTrashAlt } from 'react-icons/fa';
 import { Loading } from '../../../components/dashboard/loading/loadData';
 import DatePicker from '@/components/dashboard/datePicker';
+import ResendInvoiceButton from '@/components/dashboard/loading/resendButton';
+import StatusDropdown from '@/components/dashboard/status/statusDropdown';
+import ScheduleInvoiceForm from '@/components/dashboard/forms/invoice/scheduleInvoice';
 
 const InvoicePage = () => {
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [sendingEmail, setSendingEmail] = useState(false); // State for button loading
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
@@ -41,6 +45,24 @@ const InvoicePage = () => {
       ...prev,
       status: e.target.value,
     }));
+  };
+
+  const handleScheduleSuccess = (updatedInvoice: any) => {
+    setInvoices((prevInvoices) =>
+      prevInvoices.map((invoice) =>
+        invoice.id === updatedInvoice.id
+          ? { ...invoice, status: updatedInvoice.status }
+          : invoice,
+      ),
+    );
+  };
+
+  const updateInvoiceInList = (invoiceId: string, newStatus: string) => {
+    setInvoices((prevInvoices) =>
+      prevInvoices.map((invoice) =>
+        invoice.id === invoiceId ? { ...invoice, status: newStatus } : invoice,
+      ),
+    );
   };
 
   useEffect(() => {
@@ -124,6 +146,7 @@ const InvoicePage = () => {
                 value={filters.status || ''}
                 onChange={handleStatusChange}
                 className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+                id="status"
               >
                 <option value="">All</option>
                 <option value="Paid">Paid</option>
@@ -177,27 +200,17 @@ const InvoicePage = () => {
                   <td className="px-4 py-2 border text-gray-100 text-center">
                     {new Date(invoice.dueDate).toLocaleDateString()}
                   </td>
-                  {invoice.status === 'Paid' && (
-                    <td className="px-4 py-2 border text-gray-100 text-center">
-                      <span className="bg-green-500 text-white font-bold py-1 px-4 rounded-full">
-                        {invoice.status}
-                      </span>
-                    </td>
-                  )}
-                  {invoice.status === 'Expired' && (
-                    <td className="px-4 py-2 border text-gray-100 text-center">
-                      <span className="bg-red-500 text-white font-bold py-1 px-4 rounded-full">
-                        {invoice.status}
-                      </span>
-                    </td>
-                  )}
-                  {invoice.status === 'Pending' && (
-                    <td className="px-4 py-2 border text-gray-100 text-center">
-                      <span className="bg-yellow-500 text-white font-bold py-1 px-4 rounded-full">
-                        {invoice.status}
-                      </span>
-                    </td>
-                  )}
+                  <td className="px-4 py-2 border text-gray-100 text-center">
+                    <StatusDropdown
+                      invoiceId={invoice.id}
+                      currentStatus={invoice.status}
+                      onStatusChange={(newStatus) =>
+                        updateInvoiceInList(invoice.id, newStatus)
+                      }
+                      setInvoices={setInvoices}
+                    />
+                  </td>
+
                   {invoice.totalPrice === null ? (
                     <td>No Invoice Amount</td>
                   ) : (
@@ -211,13 +224,27 @@ const InvoicePage = () => {
                     </td>
                   )}
 
-                  <td className="px-4 py-2 border text-center">
-                    <button
-                      onClick={() => handleSoftDelete(invoice.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
-                    >
-                      <FaRegTrashAlt />
-                    </button>
+                  <td className="px-4 py-2 border text-center justify-between">
+                    <div className="flex gap-4" key={invoice.id}>
+                      <div className="bg-blue-500 hover:bg-blue-600 mr-1 text-white py-1 px-4 rounded-full font-extralight text-md flex items-center">
+                        <ResendInvoiceButton
+                          invoiceId={invoice.id}
+                          invoiceNumber={invoice.invoiceNumber}
+                        />
+                      </div>
+                      <button
+                        onClick={() => handleSoftDelete(invoice.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                      <div className="flex items-center">
+                        <ScheduleInvoiceForm
+                          invoiceId={invoice.id}
+                          onScheduleSuccess={handleScheduleSuccess}
+                        />
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}

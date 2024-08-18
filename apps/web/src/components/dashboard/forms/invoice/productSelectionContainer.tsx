@@ -92,13 +92,6 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
         </div>
       ))}
       <div className="flex items-center justify-start mt-2 gap-4">
-        <div className="flex items-center justify-start">
-          <TransitionLink href="/dashboard/products/create" className="">
-            <button className="text-white p-1 text-sm bg-blue-500 rounded-md">
-              Create new Product
-            </button>
-          </TransitionLink>
-        </div>
         <button
           onClick={addProductSelection}
           className="flex items-center gap-2 bg-green-800 px-2 p-1 rounded-full"

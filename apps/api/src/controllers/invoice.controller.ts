@@ -1,8 +1,13 @@
-import { createInvoiceAction } from '@/actions/invoice.action';
+import {
+  createInvoiceAction,
+  getInvoiceByIDAction,
+  updateInvoiceAction,
+} from '@/actions/invoice.action';
 import { sendInvoiceEmail } from '@/helpers/nodemailer';
 import { generateInvoicePDF } from '@/helpers/pdfkit';
 import { IFilterInvoice } from '@/interfaces/invoice.interface';
 import { softDeleteInvoice } from '@/queries/invoice.query';
+import { calculateDueDate } from '@/services/invoice.service';
 import { PrismaClient } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
@@ -141,8 +146,170 @@ const softDeleteInvoiceAction = async (req: Request, res: Response) => {
   }
 };
 
+const getInvoiceByIDController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const data = await getInvoiceByIDAction(id);
+
+    res.status(200).json({
+      message: 'Get invoice success',
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const updateInvoiceController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const params = req.body;
+
+    const data = await updateInvoiceAction(id, {
+      ...params,
+      status: params.status ? params.status : 'pending',
+    });
+
+    res.status(200).json({
+      message: 'Update invoice success',
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const resendInvoiceController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { invoiceId } = req.params;
+
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      include: {
+        customer: true,
+        products: true,
+      },
+    });
+
+    if (!invoice) {
+      res.status(404).json({ message: 'Invoice not found' });
+      return;
+    }
+
+    const pdfPath = generateInvoicePDF(invoice, invoice.customer);
+
+    const email = await sendInvoiceEmail({
+      to: invoice.customer?.customerEmail ?? '',
+      subject: 'Resent Invoice - Invoeasy',
+      text: `Please find attached the invoice ${invoice.invoiceNumber}`,
+      attachmentPath: pdfPath,
+    });
+
+    res.status(200).json({
+      message: 'Invoice resent successfully',
+      data: invoice,
+      email,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const updateInvoiceRecurrenceController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { invoiceId, recurrence } = req.body;
+
+    let nextInvoiceDate = new Date();
+    if (recurrence === 'weekly') {
+      nextInvoiceDate.setDate(nextInvoiceDate.getDate() + 7);
+    } else if (recurrence === 'monthly') {
+      nextInvoiceDate.setMonth(nextInvoiceDate.getMonth() + 1);
+    } else if (recurrence === 'yearly') {
+      nextInvoiceDate.setFullYear(nextInvoiceDate.getFullYear() + 1);
+    }
+
+    const invoice = await prisma.invoice.update({
+      where: { id: invoiceId },
+      data: {
+        recurrenceType: recurrence !== 'none' ? recurrence : null,
+        nextInvoiceDate: nextInvoiceDate,
+      },
+    });
+
+    res.status(200).json({ message: 'Recurrence updated', invoice });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createRecurringInvoiceController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { invoiceId } = req.body;
+
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: invoiceId },
+      include: { products: true },
+    });
+
+    if (!invoice) {
+      res.status(404).json({ message: 'Invoice not found' });
+      return;
+    }
+
+    const newInvoice = await prisma.invoice.create({
+      data: {
+        userId: invoice.userId,
+        customerId: invoice.customerId,
+        invoiceDate: new Date(),
+        dueDate: calculateDueDate(new Date()), // Calculate the due date
+        status: 'Pending',
+        products: {
+          create: invoice.products.map((product) => ({
+            id: product.id,
+            itemId: product.itemId,
+            quantity: product.quantity,
+            price: product.price,
+          })),
+        },
+        termsCondition: invoice.termsCondition,
+        tax: invoice.tax,
+        totalPrice: invoice.totalPrice,
+      },
+      include: { products: true },
+    });
+
+    res.status(201).json({ message: 'Recurring invoice created', newInvoice });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   createInvoiceController,
   getInvoicesByUserIDController,
   softDeleteInvoiceAction,
+  getInvoiceByIDController,
+  updateInvoiceController,
+  resendInvoiceController,
+  updateInvoiceRecurrenceController,
 };

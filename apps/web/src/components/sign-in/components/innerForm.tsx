@@ -4,7 +4,7 @@ import { FormValues } from '@/types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { TransitionLink } from '@/components/utils/transitionLink';
 
-export default function innerForm(props: FormikProps<FormValues>) {
+export default function InnerForm(props: FormikProps<FormValues>) {
   const { values, errors, touched, handleChange, handleSubmit, isSubmitting } =
     props;
   const [show, setShow] = useState(false);
@@ -24,6 +24,7 @@ export default function innerForm(props: FormikProps<FormValues>) {
             <Field
               name="email"
               type="email"
+              id="email"
               placeholder="Email"
               onChange={handleChange}
               value={values.email}
@@ -42,6 +43,7 @@ export default function innerForm(props: FormikProps<FormValues>) {
             <div className="relative">
               <input
                 name="password"
+                id="password"
                 type={show ? 'text' : 'password'}
                 placeholder="Password"
                 onChange={handleChange}
@@ -76,7 +78,7 @@ export default function innerForm(props: FormikProps<FormValues>) {
               href="/sign-up"
               className="text-blue-500 hover:text-blue-600"
             >
-              Don't have an account yet?
+              Don&#39;t have an account yet?
             </TransitionLink>
           </div>
           {/* <div className="text-center">

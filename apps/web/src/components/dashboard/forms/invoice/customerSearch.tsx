@@ -5,11 +5,12 @@ type Customer = {
   id: string;
   name: string;
   type: string;
+  address: string;
 };
 
 type Props = {
   customers: Customer[];
-  onCustomerSelect: (customerId: string) => void;
+  onCustomerSelect: (customerId: string, customerName: string) => void;
 };
 
 const CustomerSearch = ({ customers, onCustomerSelect }: Props) => {
@@ -36,7 +37,7 @@ const CustomerSearch = ({ customers, onCustomerSelect }: Props) => {
     setFilteredCustomers([]);
 
     // Call the callback function to update the selected customer ID
-    onCustomerSelect(customerId);
+    onCustomerSelect(customerId, customerName);
   };
 
   return (
@@ -70,13 +71,6 @@ const CustomerSearch = ({ customers, onCustomerSelect }: Props) => {
           ))}
         </ul>
       )}
-      <div className="flex items-center justify-start">
-        <TransitionLink className="" href="/dashboard/customers/create">
-          <button className="text-white p-1 mt-2 text-sm bg-blue-500 rounded-md">
-            Create new Customer
-          </button>
-        </TransitionLink>
-      </div>
     </div>
   );
 };

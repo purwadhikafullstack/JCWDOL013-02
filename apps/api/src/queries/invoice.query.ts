@@ -57,4 +57,44 @@ const softDeleteInvoice = async (invoiceId: string): Promise<Invoice> => {
   }
 };
 
-export { createInvoiceQuery, softDeleteInvoice };
+const getInvoiceByIDQuery = async (id: string): Promise<Invoice | null> => {
+  try {
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return invoice;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const updateInvoiceQuery = async (
+  id: string,
+  invoiceData: IInvoice,
+): Promise<Invoice> => {
+  try {
+    const address = await prisma.invoice.update({
+      data: {
+        ...invoiceData,
+        products: {},
+      },
+      where: {
+        id,
+      },
+    });
+
+    return address;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export {
+  createInvoiceQuery,
+  softDeleteInvoice,
+  getInvoiceByIDQuery,
+  updateInvoiceQuery,
+};
