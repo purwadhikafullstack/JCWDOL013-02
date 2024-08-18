@@ -91,4 +91,51 @@ const verifyQuery = async (data: Auth) => {
   }
 };
 
-export { registerQuery, loginQuery, verifyQuery };
+const forgotPasswordQuery = async (email: string): Promise<User> => {
+  try {
+    const t = await prisma.$transaction(async (prisma) => {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email: email },
+        });
+
+        if (!user) throw new Error('User does not exist');
+
+        const templatePath = path.join(
+          __dirname,
+          '../templates',
+          'resetPasswordEmail.hbs',
+        );
+        const payload = {
+          userId: user.id,
+          email: user.email,
+        };
+        const token = sign(payload, String(API_KEY), { expiresIn: '1h' });
+        const urlReset = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+        const templateSource = fs.readFileSync(templatePath, 'utf-8');
+
+        const compiledTemplate = handlebars.compile(templateSource);
+        const html = compiledTemplate({
+          email: user.email,
+          url: urlReset,
+        });
+
+        await transporter.sendMail({
+          from: 'sender address',
+          to: user.email || '',
+          subject: 'Reset Password',
+          html,
+        });
+
+        return user;
+      } catch (err) {
+        throw err;
+      }
+    });
+    return t;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { registerQuery, loginQuery, verifyQuery, forgotPasswordQuery };

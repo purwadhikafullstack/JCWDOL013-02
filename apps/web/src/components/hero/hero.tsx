@@ -34,7 +34,7 @@ const Carousel = () => {
   }, []);
 
   return (
-    <div className="xl:relative xl:w-full hero__image">
+    <div className="xl:relative xl:w-full hero__image sm:w-fit">
       <div className="relative h-full">
         {images.map((src, index) => (
           <div

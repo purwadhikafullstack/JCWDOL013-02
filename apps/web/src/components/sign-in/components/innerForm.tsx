@@ -3,6 +3,7 @@ import { FormikProps, Form, Field } from 'formik';
 import { FormValues } from '@/types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { TransitionLink } from '@/components/utils/transitionLink';
+import Link from 'next/link';
 
 export default function InnerForm(props: FormikProps<FormValues>) {
   const { values, errors, touched, handleChange, handleSubmit, isSubmitting } =
@@ -81,14 +82,14 @@ export default function InnerForm(props: FormikProps<FormValues>) {
               Don&#39;t have an account yet?
             </TransitionLink>
           </div>
-          {/* <div className="text-center">
+          <div className="text-center">
             <Link
               href="/forgot-password"
               className="text-blue-500 hover:text-blue-600"
             >
               Forgot Password?
             </Link>
-          </div> */}
+          </div>
         </div>
       </Form>
     </div>

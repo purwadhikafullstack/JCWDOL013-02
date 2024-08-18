@@ -101,4 +101,49 @@ export const softDeleteProductAction = async (req: Request, res: Response) => {
   }
 };
 
-export { createProductController, getProductsByUserIDController };
+const getProductByIDController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const product = await prisma.item.findUnique({
+      where: { id: id },
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch product' });
+  }
+};
+
+const updateProductController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, price, type } = req.body;
+
+  try {
+    const updatedProduct = await prisma.item.update({
+      where: { id: id },
+      data: {
+        name,
+        price: parseFloat(price),
+        type,
+      },
+    });
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+};
+
+export {
+  createProductController,
+  getProductsByUserIDController,
+  getProductByIDController,
+  updateProductController,
+};

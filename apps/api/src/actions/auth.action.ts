@@ -1,5 +1,9 @@
 import { Auth, RegisterAuth } from '@/interfaces/auth.interface';
-import { registerQuery, verifyQuery } from '@/queries/auth.query';
+import {
+  forgotPasswordQuery,
+  registerQuery,
+  verifyQuery,
+} from '@/queries/auth.query';
 import { getUserByEmailQuery } from '@/queries/user.query';
 import { User } from '@prisma/client';
 import { genSalt, hash, compare } from 'bcrypt';
@@ -86,4 +90,23 @@ const refreshTokenAction = async (email: string) => {
   }
 };
 
-export { registerAction, loginAction, verifyAction, refreshTokenAction };
+const forgotPasswordAction = async (email: string): Promise<User> => {
+  try {
+    const findUser = await getUserByEmailQuery(email);
+    if (!findUser) throw new Error('User does not exist');
+
+    const user = await forgotPasswordQuery(email);
+
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export {
+  registerAction,
+  loginAction,
+  verifyAction,
+  refreshTokenAction,
+  forgotPasswordAction,
+};

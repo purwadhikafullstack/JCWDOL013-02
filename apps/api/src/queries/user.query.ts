@@ -1,4 +1,4 @@
-import { IFilterUser, IResultUser } from '@/interfaces/user.interface';
+import { IFilterUser, IResultUser, IUser } from '@/interfaces/user.interface';
 import { PrismaClient, User } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -68,4 +68,26 @@ const getUserByIDQuery = async (id: string): Promise<User | null> => {
   }
 };
 
-export { getUserByEmailQuery, getUsersQuery, getUserByIDQuery };
+const updateUserQuery = async (id: string, userData: IUser): Promise<User> => {
+  try {
+    const user = await prisma.user.update({
+      data: {
+        ...userData,
+      },
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export {
+  getUserByEmailQuery,
+  getUsersQuery,
+  getUserByIDQuery,
+  updateUserQuery,
+};

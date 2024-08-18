@@ -1,7 +1,4 @@
-import {
-  createCustomerAction,
-  getCustomersByUserIDAction,
-} from '@/actions/customer.action';
+import { createCustomerAction } from '@/actions/customer.action';
 import { IFilterCustomer } from '@/interfaces/customer.interface';
 import { softDeleteCustomer } from '@/queries/customer.query';
 import { PrismaClient } from '@prisma/client';
@@ -125,4 +122,65 @@ export const softDeleteCustomerAction = async (req: Request, res: Response) => {
   }
 };
 
-export { createCustomerController, getCustomersByUserIDController };
+const getCustomerByIDController = async (req: Request, res: Response) => {
+  const { customerId } = req.params;
+
+  try {
+    // Fetch customer details by ID
+    const customer = await prisma.customer.findUnique({
+      where: { id: customerId },
+    });
+
+    // Check if customer exists
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    // Return customer details
+    res.status(200).json(customer);
+  } catch (err) {
+    console.error('Error fetching customer by ID:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const updateCustomerController = async (req: Request, res: Response) => {
+  const { customerId } = req.params;
+  const { name, customerEmail, address, type, paymentMethod } = req.body;
+
+  try {
+    // Check if the customer exists
+    const existingCustomer = await prisma.customer.findUnique({
+      where: { id: customerId },
+    });
+
+    if (!existingCustomer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    // Update the customer details
+    const updatedCustomer = await prisma.customer.update({
+      where: { id: customerId },
+      data: {
+        name,
+        customerEmail,
+        address,
+        type,
+        paymentMethod,
+      },
+    });
+
+    // Return the updated customer details
+    res.status(200).json(updatedCustomer);
+  } catch (err) {
+    console.error('Error updating customer:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export {
+  createCustomerController,
+  getCustomersByUserIDController,
+  getCustomerByIDController,
+  updateCustomerController,
+};

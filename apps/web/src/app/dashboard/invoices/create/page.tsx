@@ -178,14 +178,14 @@ const CreateInvoicePage = () => {
 
   return (
     <div className="flex items-center justify-center -mt-10">
-      <div className="p-10 w-full">
-        <div className="my-10 border-gray-800 bg-gradient-to-tr from-gray-800 via-gray-700 to-black rounded-xl shadow-2xl shadow-teal-400 p-10">
-          <h2 className="text-3xl font-serif font-bold text-teal-500 border-teal-950 border-b-2 text-center">
+      <div className="p-4 w-full max-w-4xl">
+        <div className="my-10 border-gray-800 bg-gradient-to-tr from-gray-800 via-gray-700 to-black rounded-xl shadow-2xl shadow-teal-400 p-6 sm:p-10">
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-teal-500 border-teal-950 border-b-2 text-center">
             Create New Invoice
           </h2>
           <form onSubmit={handleSubmit}>
-            <div className="space-y-6 w-full rounded-xl p-6 justify-center">
-              <div className="form-control flex justify-center gap-4">
+            <div className="space-y-6 w-full rounded-xl p-4 sm:p-6">
+              <div className="form-control flex flex-col sm:flex-row justify-center gap-4">
                 <CustomerSearch
                   customers={customers}
                   onCustomerSelect={handleCustomerSelect}
@@ -197,7 +197,7 @@ const CreateInvoicePage = () => {
                 />
               </div>
               <div className="form-control">
-                <div className="flex justify-between space-x-4">
+                <div className="flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:space-x-4">
                   <ProductSelectionContainer
                     products={products}
                     onProductChange={handleProductChange}
@@ -205,7 +205,7 @@ const CreateInvoicePage = () => {
                   />
                 </div>
               </div>
-              <div className="form-control flex">
+              <div className="form-control flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <TermsCondition
                   formDataTnc={formData.termsCondition}
                   handleChange={handleChange}
@@ -230,17 +230,17 @@ const CreateInvoicePage = () => {
                   }}
                 />
               </div>
-              <div className="flex space-x-4 justify-center">
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
                 <button
                   type="button"
                   onClick={() => router.push('/dashboard/invoices')}
-                  className="w-full bg-red-400 text-white py-2 rounded-full hover:bg-red-500 p-4"
+                  className="w-full sm:w-auto bg-red-400 text-white py-2 rounded-full hover:bg-red-500 p-4"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`w-full flex justify-center items-center bg-blue-800 text-white py-2 rounded-full hover:bg-teal-700 p-4 ${isLoading ? 'cursor-not-allowed' : ''}`}
+                  className={`w-full sm:w-auto flex justify-center items-center bg-blue-800 text-white py-2 rounded-full hover:bg-teal-700 p-4 ${isLoading ? 'cursor-not-allowed' : ''}`}
                   disabled={isLoading}
                 >
                   {isLoading ? (

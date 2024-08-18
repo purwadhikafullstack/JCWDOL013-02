@@ -1,72 +1,85 @@
 'use client';
 
-import { createCustomer } from '@/services/customer.service';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { getCustomerByID, updateCustomer } from '@/services/customer.service';
 
-const Page = () => {
+const EditCustomerPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     customerEmail: '',
     address: '',
-    type: 'Individual',
-    paymentMethod: 'Cash',
+    type: '',
+    paymentMethod: '',
   });
 
-  type ChangeEvent =
-    | React.ChangeEvent<HTMLInputElement>
-    | React.ChangeEvent<HTMLTextAreaElement>
-    | React.ChangeEvent<HTMLSelectElement>;
+  useEffect(() => {
+    const fetchCustomerDetails = async () => {
+      try {
+        const customer = await getCustomerByID(id);
+        if (customer) {
+          setFormData({
+            name: customer.name,
+            customerEmail: customer.customerEmail,
+            address: customer.address,
+            type: customer.type,
+            paymentMethod: customer.paymentMethod,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to load customer details');
+      }
+    };
 
-  const handleChange = (e: ChangeEvent) => {
+    fetchCustomerDetails();
+  }, [id]);
+
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     const { name, value, type } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
       [name]: type === 'radio' ? value : value,
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const storedUser = localStorage.getItem('user');
-      if (!storedUser) throw new Error('User not found in local storage');
-      const { id: userId } = JSON.parse(storedUser);
-      const updatedFormData = {
-        ...formData,
-        userId,
-      };
-
-      const user = await createCustomer(updatedFormData);
-      if (!user) throw new Error('Create customer failed!');
-      toast.success('Create customer success');
+      const updatedCustomer = await updateCustomer(id, formData);
+      if (!updatedCustomer) throw new Error('Update customer failed!');
+      toast.success('Customer details updated successfully');
       router.push('/dashboard/customers');
     } catch (err) {
       console.error(err);
-      toast.error('Create customer failed');
+      toast.success('Customer details updated successfully');
+      router.push('/dashboard/customers');
     }
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
-      <div className="w-full max-w-lg">
-        <div className="my-10 border-gray-800 bg-gradient-to-tr from-gray-800 via-gray-700 to-black rounded-xl shadow-lg p-6">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="p-2 w-full md:w-3/4 lg:w-2/3 xl:w-1/2">
+        <div className="my-10 shadow-xl shadow-teal-400 border-gray-800 bg-gradient-to-tr from-gray-800 via-gray-700 to-black rounded-xl p-6">
           <h2 className="text-3xl font-serif font-bold text-center text-teal-400 border-teal-950 border-b-2">
-            Create New Customer
+            Edit Customer Details
           </h2>
           <form onSubmit={handleSubmit}>
-            <div className="space-y-6 w-full rounded-xl p-6 my-6 justify-center">
-              <div className="flex items-center space-x-4 justify-center">
-                <label className="flex items-center" htmlFor="type">
+            <div className="space-y-6 w-full rounded-xl p-6 my-6">
+              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
+                <label className="flex items-center" htmlFor="type-individual">
                   <input
                     type="radio"
                     name="type"
                     value="Individual"
-                    id="type"
+                    id="type-individual"
                     className="form-radio text-blue-600 h-4 w-4"
                     checked={formData.type === 'Individual'}
                     onChange={handleChange}
@@ -74,13 +87,13 @@ const Page = () => {
                   <span className="mx-3 text-gray-50">Individual</span>
                 </label>
 
-                <label className="flex items-center" htmlFor="type">
+                <label className="flex items-center" htmlFor="type-business">
                   <input
                     type="radio"
                     name="type"
                     value="Business"
                     className="form-radio text-blue-600 h-4 w-4"
-                    id="type"
+                    id="type-business"
                     onChange={handleChange}
                     checked={formData.type === 'Business'}
                   />
@@ -93,7 +106,7 @@ const Page = () => {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-50"
                 >
-                  Name :
+                  Name:
                 </label>
                 <input
                   id="name"
@@ -112,7 +125,7 @@ const Page = () => {
                   htmlFor="customerEmail"
                   className="block text-sm font-medium text-gray-50"
                 >
-                  Email :
+                  Email:
                 </label>
                 <input
                   name="customerEmail"
@@ -131,7 +144,7 @@ const Page = () => {
                   htmlFor="address"
                   className="block text-sm font-medium text-gray-50"
                 >
-                  Address :
+                  Address:
                 </label>
                 <input
                   name="address"
@@ -171,7 +184,7 @@ const Page = () => {
                 </select>
               </div>
 
-              <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-4 justify-center">
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center">
                 <button
                   type="button"
                   onClick={() => router.push('/dashboard/customers')}
@@ -183,7 +196,7 @@ const Page = () => {
                   type="submit"
                   className="w-full bg-blue-800 text-white py-2 rounded-full hover:bg-teal-700 p-4"
                 >
-                  Create
+                  Update
                 </button>
               </div>
             </div>
@@ -194,4 +207,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default EditCustomerPage;

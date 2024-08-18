@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
 import { ICustomer } from '@/interfaces/customer.interface';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 import CustomerSearchBar from '@/components/searchBar/searchBar';
+import Link from 'next/link';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
@@ -106,12 +107,12 @@ const CustomersPage = () => {
 
   return (
     <div className="p-4">
-      <div className="my-10 border-gray-800 bg-slate-800 rounded-xl shadow-2xl p-6 shadow-teal-200">
-        <h2 className="text-3xl font-serif font-bold border-b-2 mb-4 text-teal-400 border-teal-900">
+      <div className="my-10 border-gray-800 bg-slate-800 rounded-xl shadow-2xl p-4 sm:p-6 lg:p-8 shadow-teal-200">
+        <h2 className="text-2xl sm:text-3xl font-serif font-bold border-b-2 mb-4 text-teal-400 border-teal-900">
           Customer Management
         </h2>
-        <div className="flex justify-between">
-          <div className="flex gap-4 pb-8 justify-start">
+        <div className="flex flex-col lg:flex-row justify-between space-y-4 lg:space-y-0">
+          <div className="flex flex-col sm:flex-row gap-4 pb-4 sm:pb-8 justify-start">
             <CustomerSearchBar setFilters={setFilters} />
             <button
               className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
@@ -122,38 +123,43 @@ const CustomersPage = () => {
               + Add New
             </button>
           </div>
-          <div className="-mt-2 justify-center p-5">
-            <label htmlFor="type" className="text-white mr-3 mb-1">
-              Customer Type:
-            </label>
-            <select
-              value={filters.type || ''}
-              onChange={handleTypeChange}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
-              id="type"
-            >
-              <option value="">All</option>
-              <option value="Individual">Individual</option>
-              <option value="Business">Business</option>
-            </select>
-          </div>
-          <div className="-mt-2 justify-center p-5">
-            <label htmlFor="paymentMethod" className="text-white mr-3 mb-1">
-              Payment Type:
-            </label>
-            <select
-              value={filters.paymentMethod || ''}
-              onChange={handlePaymentChange}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
-              id="paymentMethod"
-            >
-              <option value="">All</option>
-              <option value="Cash">Cash</option>
-              <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Virtual Account">Virtual Account</option>
-              <option value="OVO">OVO</option>
-              <option value="Gopay">Gopay</option>
-            </select>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row items-center sm:gap-4 justify-center">
+              <label htmlFor="type" className="text-white mr-3 mb-1 sm:mb-0">
+                Customer Type:
+              </label>
+              <select
+                value={filters.type || ''}
+                onChange={handleTypeChange}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-base sm:text-lg"
+                id="type"
+              >
+                <option value="">All</option>
+                <option value="Individual">Individual</option>
+                <option value="Business">Business</option>
+              </select>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center sm:gap-4 justify-center">
+              <label
+                htmlFor="paymentMethod"
+                className="text-white mr-3 mb-1 sm:mb-0"
+              >
+                Payment Type:
+              </label>
+              <select
+                value={filters.paymentMethod || ''}
+                onChange={handlePaymentChange}
+                className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-base sm:text-lg mb-4 lg:mb-0"
+                id="paymentMethod"
+              >
+                <option value="">All</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Virtual Account">Virtual Account</option>
+                <option value="OVO">OVO</option>
+                <option value="Gopay">Gopay</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -201,13 +207,27 @@ const CustomersPage = () => {
                   <td className="text-center border px-1 text-gray-100">
                     {customer.paymentMethod}
                   </td>
-                  <td className="px-4 py-2 border text-center">
-                    <button
-                      onClick={() => handleSoftDelete(customer.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
-                    >
-                      <FaRegTrashAlt />
-                    </button>
+                  <td className="px-4 py-2 border text-center justify-between">
+                    <div className="flex gap-2 sm:gap-4">
+                      <div className="bg-blue-500 hover:bg-blue-600 mr-1 text-white py-1 px-2 sm:px-4 rounded-full font-extralight text-sm sm:text-md flex items-center">
+                        <button>
+                          <Link
+                            href={`/dashboard/customers/edit/${customer.id}`}
+                            prefetch={true}
+                          >
+                            <FaRegEdit />
+                          </Link>
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => handleSoftDelete(customer.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 sm:px-4 rounded-full"
+                        >
+                          <FaRegTrashAlt />
+                        </button>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}

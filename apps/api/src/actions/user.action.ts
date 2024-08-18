@@ -1,6 +1,10 @@
 import { HttpException } from '@/exceptions/httpException';
-import { IFilterUser, IResultUser } from '@/interfaces/user.interface';
-import { getUserByIDQuery, getUsersQuery } from '@/queries/user.query';
+import { IFilterUser, IResultUser, IUser } from '@/interfaces/user.interface';
+import {
+  getUserByIDQuery,
+  getUsersQuery,
+  updateUserQuery,
+} from '@/queries/user.query';
 import { User } from '@prisma/client';
 
 const getUsersAction = async (filters: IFilterUser): Promise<IResultUser> => {
@@ -24,4 +28,13 @@ const getUserByIDAction = async (id: string): Promise<User | null> => {
   }
 };
 
-export { getUserByIDAction, getUsersAction };
+const updateUserAction = async (id: string, userData: IUser): Promise<User> => {
+  try {
+    const user = await updateUserQuery(id, userData);
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { getUserByIDAction, getUsersAction, updateUserAction };

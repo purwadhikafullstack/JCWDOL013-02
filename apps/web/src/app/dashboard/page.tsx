@@ -10,15 +10,15 @@ import { FaFileInvoice } from 'react-icons/fa';
 
 const Page = () => {
   return (
-    <div className="container mx-auto px-20 py-10">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-20 py-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <BentoBox
           href="/dashboard/invoices/create"
           title="Create Invoice"
           description="Quick Create Invoice"
           icon={
             <svg
-              className="w-20 h-20 text-white justify-center"
+              className="w-16 h-16 sm:w-20 sm:h-20 text-white justify-center"
               viewBox="0 0 17 19"
             >
               <LiaFileInvoiceDollarSolid className="justify-center" />
@@ -31,7 +31,7 @@ const Page = () => {
           description="Quick Create Customer"
           icon={
             <svg
-              className="w-20 h-20 text-white justify-center"
+              className="w-16 h-16 sm:w-20 sm:h-20 text-white justify-center"
               viewBox="0 0 16 18"
             >
               <FaPersonCirclePlus />
@@ -44,7 +44,7 @@ const Page = () => {
           description="Quick Create Product"
           icon={
             <svg
-              className="w-20 h-20 text-white justify-center"
+              className="w-16 h-16 sm:w-20 sm:h-20 text-white justify-center"
               viewBox="0 0 16 18"
             >
               <AiOutlineShopping />
@@ -55,8 +55,10 @@ const Page = () => {
           title="Pending Invoices"
           description="Quick catch up on your pending invoices."
           icon={
-            <svg className="w-20 h-20 text-gray-500" viewBox="0 0 24 24">
-              {' '}
+            <svg
+              className="w-16 h-16 sm:w-20 sm:h-20 text-gray-500"
+              viewBox="0 0 24 24"
+            >
               <FaFileInvoice color="yellow" />
             </svg>
           }

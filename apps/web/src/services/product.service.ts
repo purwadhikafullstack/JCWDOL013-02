@@ -38,3 +38,31 @@ export const getProductsByUserID = async ({
     console.error(err);
   }
 };
+
+export const getProductByID = async (id: string) => {
+  try {
+    const response = await instance.get(`/products/product/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch product:', error);
+    throw error;
+  }
+};
+
+// Service to update product
+export const updateProduct = async (
+  id: string,
+  formData: {
+    name: string;
+    price: number;
+    type: string;
+  },
+) => {
+  try {
+    const response = await instance.put(`/products/product/${id}`, formData);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to update product:', error);
+    throw error;
+  }
+};

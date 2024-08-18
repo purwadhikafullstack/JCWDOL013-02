@@ -122,11 +122,11 @@ const InvoicePage = () => {
         <h2 className="text-3xl font-serif font-bold border-teal-900 border-b-2 mb-4 text-teal-400 tracking-tighter">
           Invoice Management
         </h2>
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex gap-4">
+        <div className="flex flex-col lg:flex-row justify-between items-center mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
             <InvoiceSearchBar setFilters={setFilters} />
             <button
-              className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
+              className="flex items-center justify-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
               onClick={() => {
                 router.push(`/dashboard/invoices/create`);
               }}
@@ -134,8 +134,8 @@ const InvoicePage = () => {
               + Add New
             </button>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="-mt-8">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+            <div className="mt-4 lg:-mt-8 w-full sm:w-auto">
               <label
                 htmlFor="status"
                 className="text-white block text-center mb-1"
@@ -145,7 +145,7 @@ const InvoicePage = () => {
               <select
                 value={filters.status || ''}
                 onChange={handleStatusChange}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg"
+                className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-teal-500 text-lg w-full sm:w-auto"
                 id="status"
               >
                 <option value="">All</option>
@@ -154,11 +154,13 @@ const InvoicePage = () => {
                 <option value="Expired">Expired</option>
               </select>
             </div>
-            <DatePicker
-              filters={filters}
-              setFilters={setFilters}
-              router={router}
-            />
+            <div className="w-full sm:w-auto">
+              <DatePicker
+                filters={filters}
+                setFilters={setFilters}
+                router={router}
+              />
+            </div>
           </div>
         </div>
 
@@ -224,9 +226,9 @@ const InvoicePage = () => {
                     </td>
                   )}
 
-                  <td className="px-4 py-2 border text-center justify-between">
-                    <div className="flex gap-4" key={invoice.id}>
-                      <div className="bg-blue-500 hover:bg-blue-600 mr-1 text-white py-1 px-4 rounded-full font-extralight text-md flex items-center">
+                  <td className="px-4 py-2 border text-center">
+                    <div className="flex flex-col lg:flex-row gap-4 justify-center">
+                      <div className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded-full font-extralight text-md flex items-center justify-center">
                         <ResendInvoiceButton
                           invoiceId={invoice.id}
                           invoiceNumber={invoice.invoiceNumber}
@@ -238,7 +240,7 @@ const InvoicePage = () => {
                       >
                         <FaRegTrashAlt />
                       </button>
-                      <div className="flex items-center">
+                      <div className="flex items-center justify-center">
                         <ScheduleInvoiceForm
                           invoiceId={invoice.id}
                           onScheduleSuccess={handleScheduleSuccess}

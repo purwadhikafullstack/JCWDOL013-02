@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/lib/features/auth/authSlice';
 import Image from 'next/image';
+import { TransitionLink } from '../utils/transitionLink';
 
 type Props = {
   show: boolean;
@@ -48,8 +49,8 @@ const NavBar = ({
             >
               <div className="rounded-full">
                 {profile ? (
-                  <ul className="p-2 w-full border-r bg-white absolute rounded left-0 shadow mt-12 sm:mt-16 ">
-                    <li className="flex w-full justify-between text-gray-600 hover:text-indigo-700 cursor-pointer items-center">
+                  <ul className="p-2 w-full border-r bg-white absolute rounded left-0 mt-12 sm:mt-8 shadow-lg shadow-teal-400">
+                    <li className="flex w-full justify-between text-gray-600 hover:text-teal-700 cursor-pointer items-center">
                       <div className="flex items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -67,10 +68,15 @@ const NavBar = ({
                           <circle cx={12} cy={7} r={4} />
                           <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                         </svg>
-                        <span className="text-sm ml-2">My Profile</span>
+                        <TransitionLink
+                          href={`/dashboard/users/${user?.id}`}
+                          className="text-sm ml-2"
+                        >
+                          My Profile
+                        </TransitionLink>
                       </div>
                     </li>
-                    <li className="flex w-full justify-between text-gray-600 hover:text-indigo-700 cursor-pointer items-center mt-2">
+                    <li className="flex w-full justify-between text-gray-600 hover:text-teal-700 cursor-pointer items-center mt-2">
                       <div className="flex items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

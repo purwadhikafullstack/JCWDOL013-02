@@ -1,4 +1,8 @@
-import { getUserByIDAction, getUsersAction } from '@/actions/user.action';
+import {
+  getUserByIDAction,
+  getUsersAction,
+  updateUserAction,
+} from '@/actions/user.action';
 import { Request, Response, NextFunction } from 'express';
 
 const getUsersController = async (
@@ -38,4 +42,26 @@ const getUserByIDController = async (
   }
 };
 
-export { getUsersController, getUserByIDController };
+const updateUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const params = req.body;
+
+    const data = await updateUserAction(id, {
+      ...params,
+    });
+
+    res.status(200).json({
+      message: 'Update user success',
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { getUsersController, getUserByIDController, updateUserController };

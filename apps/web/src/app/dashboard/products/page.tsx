@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
 import { IProduct } from '@/interfaces/product.interface';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 import CustomerSearchBar from '@/components/searchBar/searchBar';
+import Link from 'next/link';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -100,11 +101,11 @@ const ProductsPage = () => {
   return (
     <div className="p-4">
       <div className="my-10 border-gray-800 bg-slate-800 rounded-xl shadow-2xl shadow-teal-200 p-6">
-        <h2 className="text-3xl font-serif font-bold border-teal-900 border-b-2 mb-4 text-teal-400 tracking-tighter">
+        <h2 className="text-2xl sm:text-3xl font-serif font-bold border-teal-900 border-b-2 mb-4 text-teal-400 tracking-tighter">
           Product & Service Management
         </h2>
-        <div className="flex justify-between">
-          <div className="flex gap-4 pb-8 justify-start">
+        <div className="flex flex-col lg:flex-row justify-between gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 pb-8 justify-start">
             <CustomerSearchBar setFilters={setFilters} />
             <button
               className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"
@@ -115,8 +116,8 @@ const ProductsPage = () => {
               + Add New
             </button>
           </div>
-          <div className="-mt-2 justify-center p-5">
-            <label htmlFor="type" className="text-white mr-3 mb-1">
+          <div className="flex flex-col sm:flex-row lg:flex-col lg:items-center justify-center p-5">
+            <label htmlFor="type" className="text-white mr-3 mb-1 lg:mb-2">
               Product Type:
             </label>
             <select
@@ -151,7 +152,7 @@ const ProductsPage = () => {
                 <tr>
                   <td
                     className="px-4 py-10 border text-center text-gray-300 text-3xl"
-                    colSpan={7}
+                    colSpan={5}
                   >
                     No Products yet, Please add a new one
                   </td>
@@ -176,13 +177,22 @@ const ProductsPage = () => {
                         maximumFractionDigits: 2,
                       })}
                   </td>
-                  <td className="px-4 py-2 border text-center">
-                    <button
-                      onClick={() => handleSoftDelete(product.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
-                    >
-                      <FaRegTrashAlt />
-                    </button>
+                  <td className="px-4 py-2 border text-end">
+                    <div className="flex gap-4 justify-center">
+                      <Link
+                        href={`/dashboard/products/edit/${product.id}`}
+                        prefetch={true}
+                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded-full font-extralight text-md flex items-center"
+                      >
+                        <FaRegEdit />
+                      </Link>
+                      <button
+                        onClick={() => handleSoftDelete(product.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
