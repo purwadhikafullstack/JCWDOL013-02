@@ -24,7 +24,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 const SECRET_KEY = process.env.JWT_SECRET as string;
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
+  const token = req.headers['authorization']?.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
@@ -32,8 +32,8 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded as User; // Attach user data to the request object
-    next(); // Continue to the next middleware or route handler
+    req.user = decoded as User;
+    next();
   } catch (error) {
     console.error('Token verification failed:', error);
     res.status(401).json({ message: 'Invalid token' });

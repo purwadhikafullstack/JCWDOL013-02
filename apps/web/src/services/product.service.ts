@@ -49,7 +49,6 @@ export const getProductByID = async (id: string) => {
   }
 };
 
-// Service to update product
 export const updateProduct = async (
   id: string,
   formData: {

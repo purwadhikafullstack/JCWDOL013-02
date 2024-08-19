@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { updateInvoice } from '@/services/invoice.service'; // Adjust the service import as needed
+import { updateInvoice } from '@/services/invoice.service';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { IInvoice } from '@/interfaces/invoice.interface';

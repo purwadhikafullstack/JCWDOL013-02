@@ -32,11 +32,9 @@ const CustomerSearch = ({ customers, onCustomerSelect }: Props) => {
   };
 
   const handleSelect = (customerId: string, customerName: string) => {
-    // Clear the search term and filtered results
     setSearchTerm(customerName);
     setFilteredCustomers([]);
 
-    // Call the callback function to update the selected customer ID
     onCustomerSelect(customerId, customerName);
   };
 

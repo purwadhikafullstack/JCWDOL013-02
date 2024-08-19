@@ -16,7 +16,7 @@ app.use('/protected', authMiddleware, (req, res) => {
   res.send('This is a protected route.');
 });
 
-// scheduledInvoice();
+scheduledInvoice();
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

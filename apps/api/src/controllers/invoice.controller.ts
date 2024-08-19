@@ -34,12 +34,10 @@ const createInvoiceController = async (
 
     const user = await prisma.user.findUnique({
       where: {
-        id: params.customerId,
-        name: params.customerName,
-        email: params.address,
+        id: params.userId,
+        name: params.name,
+        email: params.email,
         phone: params.phone,
-        createdDate: params.createdDate,
-        updatedDate: params.updatedDate,
       },
     });
 
@@ -296,7 +294,7 @@ const createRecurringInvoiceController = async (
         userId: invoice.userId,
         customerId: invoice.customerId,
         invoiceDate: new Date(),
-        dueDate: calculateDueDate(new Date()), // Calculate the due date
+        dueDate: calculateDueDate(new Date()),
         status: 'Pending',
         products: {
           create: invoice.products.map((product) => ({

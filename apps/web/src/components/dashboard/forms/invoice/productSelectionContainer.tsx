@@ -40,7 +40,7 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
           price: selectedProduct.price,
         };
         setSelectedProducts(updatedProducts);
-        onProductChange(updatedProducts); // Pass the entire array of updated products
+        onProductChange(updatedProducts);
       }
     };
 
@@ -49,7 +49,7 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
       const updatedProducts = [...selectedProducts];
       updatedProducts[index].quantity = Number(event.target.value);
       setSelectedProducts(updatedProducts);
-      onProductChange(updatedProducts); // Pass the entire array of updated products
+      onProductChange(updatedProducts);
       onQuantityChange(
         updatedProducts[index].itemId,
         updatedProducts[index].quantity,
@@ -67,7 +67,7 @@ const ProductSelectionContainer: React.FC<ProductSelectionContainerProps> = ({
     const updatedProducts = [...selectedProducts];
     updatedProducts.splice(index, 1);
     setSelectedProducts(updatedProducts);
-    onProductChange(updatedProducts); // Pass the entire array of updated products
+    onProductChange(updatedProducts);
   };
 
   return (

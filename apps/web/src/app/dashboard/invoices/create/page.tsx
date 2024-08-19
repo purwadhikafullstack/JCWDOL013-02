@@ -60,16 +60,16 @@ const CreateInvoicePage = () => {
           getProductsByUserID(userId),
         ]);
 
-        if (customerResult) {
+        if (customerResult && customerResult.customers.length > 0) {
           setCustomers(customerResult.customers);
         } else {
-          toast.error('Failed to fetch customers');
+          setCustomers([]);
         }
 
-        if (productResult) {
+        if (productResult && productResult.products.length > 0) {
           setProducts(productResult.products);
         } else {
-          toast.error('Failed to fetch products');
+          setProducts([]);
         }
       } catch (error) {
         console.error('Error fetching customers:', error);

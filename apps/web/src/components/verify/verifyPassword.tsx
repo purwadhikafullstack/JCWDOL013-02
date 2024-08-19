@@ -65,7 +65,7 @@ const VerifyPassword = () => {
 
   return (
     <AuthUser>
-      <div className="min-h-screen bg-gray-50 xl:p-40 w-full h-full">
+      <div className="min-h-screen bg-gray-50 xl:p-40 w-fit h-full">
         <div className="flex text-center justify-center logo__image">
           <Logo />
         </div>

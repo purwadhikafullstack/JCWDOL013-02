@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { resendInvoice } from '@/services/invoice.service'; // Assume this service is set up
+import { resendInvoice } from '@/services/invoice.service';
 import { toast } from 'react-toastify';
 import { FaSpinner } from 'react-icons/fa';
 import { FaArrowRotateLeft } from 'react-icons/fa6';

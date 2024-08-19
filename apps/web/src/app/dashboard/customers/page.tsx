@@ -207,26 +207,21 @@ const CustomersPage = () => {
                   <td className="text-center border px-1 text-gray-100">
                     {customer.paymentMethod}
                   </td>
-                  <td className="px-4 py-2 border text-center justify-between">
-                    <div className="flex gap-2 sm:gap-4">
-                      <div className="bg-blue-500 hover:bg-blue-600 mr-1 text-white py-1 px-2 sm:px-4 rounded-full font-extralight text-sm sm:text-md flex items-center">
-                        <button>
-                          <Link
-                            href={`/dashboard/customers/edit/${customer.id}`}
-                            prefetch={true}
-                          >
-                            <FaRegEdit />
-                          </Link>
-                        </button>
-                      </div>
-                      <div>
-                        <button
-                          onClick={() => handleSoftDelete(customer.id)}
-                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 sm:px-4 rounded-full"
-                        >
-                          <FaRegTrashAlt />
-                        </button>
-                      </div>
+                  <td className="px-4 py-2 border text-end">
+                    <div className="flex gap-4 justify-center">
+                      <Link
+                        href={`/dashboard/customers/edit/${customer.id}`}
+                        prefetch={true}
+                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded-full font-extralight text-md flex items-center"
+                      >
+                        <FaRegEdit />
+                      </Link>
+                      <button
+                        onClick={() => handleSoftDelete(customer.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded-full"
+                      >
+                        <FaRegTrashAlt />
+                      </button>
                     </div>
                   </td>
                 </tr>

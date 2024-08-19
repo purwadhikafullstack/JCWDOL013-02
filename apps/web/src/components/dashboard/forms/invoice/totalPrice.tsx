@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 type TotalPrice = {
   formDataTax: number;
@@ -15,7 +15,7 @@ const TotalPrice = ({
   onTotalPriceChange,
   onQuantityChange,
 }: TotalPrice) => {
-  const calculateSummary = () => {
+  const calculateSummary = useCallback(() => {
     const itemPrice = products.reduce(
       (acc, product) => acc + product.price * (product.quantity || 0),
       0,
@@ -29,7 +29,7 @@ const TotalPrice = ({
       taxAmount: isNaN(taxAmount) ? 0 : taxAmount,
       totalPrice: isNaN(totalPrice) ? 0 : totalPrice,
     };
-  };
+  }, [products, formDataTax]);
 
   useEffect(() => {
     const summary = calculateSummary();

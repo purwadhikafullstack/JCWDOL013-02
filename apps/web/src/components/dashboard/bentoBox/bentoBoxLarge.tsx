@@ -19,7 +19,6 @@ const BentoBoxLarge = ({ title, description, icon }: CardProps) => {
   const [pendingInvoices, setPendingInvoices] = useState<Invoice[]>([]);
 
   useEffect(() => {
-    // Fetch pending invoices
     const fetchPendingInvoices = async () => {
       try {
         const user = JSON.parse(localStorage.getItem('user') || '{}');

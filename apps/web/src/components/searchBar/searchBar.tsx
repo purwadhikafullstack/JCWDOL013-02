@@ -1,5 +1,6 @@
 import { debounce } from '@/types/debounce';
 import React, { useState, useCallback } from 'react';
+import { TbZoomReset } from 'react-icons/tb';
 
 interface CustomerSearchBarProps {
   setFilters: React.Dispatch<
@@ -48,14 +49,31 @@ const CustomerSearchBar: React.FC<CustomerSearchBarProps> = ({
     }
   };
 
+  const resetFilters = () => {
+    setSearchTerm('');
+    setFilters((filters) => ({
+      ...filters,
+      keyword: '',
+      page: 1,
+    }));
+  };
+
   return (
-    <input
-      type="text"
-      placeholder="Search..."
-      value={searchTerm}
-      onChange={onChangeSearch}
-      className="px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-    />
+    <>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={onChangeSearch}
+        className="px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+      <button
+        onClick={resetFilters}
+        className="lg:-ml-2 px-3 bg-gray-200 rounded-md"
+      >
+        <TbZoomReset size={20} />
+      </button>
+    </>
   );
 };
 

@@ -105,7 +105,7 @@ const ProductsPage = () => {
           Product & Service Management
         </h2>
         <div className="flex flex-col lg:flex-row justify-between gap-4">
-          <div className="flex flex-col sm:flex-row gap-4 pb-8 justify-start">
+          <div className="flex flex-col sm:flex-row gap-4 pb-8 mt-8 justify-start">
             <CustomerSearchBar setFilters={setFilters} />
             <button
               className="flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600"

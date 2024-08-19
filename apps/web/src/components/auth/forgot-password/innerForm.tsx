@@ -1,6 +1,6 @@
 import { FormikProps, Form, Field } from 'formik';
 import { FormValues } from './types';
-import Link from 'next/link';
+import { TransitionLink } from '@/components/utils/transitionLink';
 
 export default function InnerForm(props: FormikProps<FormValues>) {
   const { values, errors, touched, handleChange, handleSubmit, isSubmitting } =
@@ -37,11 +37,11 @@ export default function InnerForm(props: FormikProps<FormValues>) {
           >
             Send Reset Link
           </button>
-          <Link href="/">
+          <TransitionLink className="" href="/">
             <p className="text-blue-500 text-center mt-4 hover:text-blue-600">
               Back to Sign In
             </p>
-          </Link>
+          </TransitionLink>
         </div>
       </Form>
     </div>

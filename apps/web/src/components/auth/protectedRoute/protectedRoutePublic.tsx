@@ -6,15 +6,18 @@ const ProtectedRoutePublic: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const router = useRouter();
-  const token = localStorage.getItem('token');
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   useEffect(() => {
     if (!token) {
       router.push('/');
+    } else {
+      router.push('/dashboard');
     }
   }, [token, router]);
 
-  return <>{children}</>;
+  return token ? <>{children}</> : null;
 };
 
 export default ProtectedRoutePublic;

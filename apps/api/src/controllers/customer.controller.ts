@@ -126,17 +126,14 @@ const getCustomerByIDController = async (req: Request, res: Response) => {
   const { customerId } = req.params;
 
   try {
-    // Fetch customer details by ID
     const customer = await prisma.customer.findUnique({
       where: { id: customerId },
     });
 
-    // Check if customer exists
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
 
-    // Return customer details
     res.status(200).json(customer);
   } catch (err) {
     console.error('Error fetching customer by ID:', err);
@@ -149,7 +146,6 @@ const updateCustomerController = async (req: Request, res: Response) => {
   const { name, customerEmail, address, type, paymentMethod } = req.body;
 
   try {
-    // Check if the customer exists
     const existingCustomer = await prisma.customer.findUnique({
       where: { id: customerId },
     });
@@ -158,7 +154,6 @@ const updateCustomerController = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Customer not found' });
     }
 
-    // Update the customer details
     const updatedCustomer = await prisma.customer.update({
       where: { id: customerId },
       data: {
@@ -170,7 +165,6 @@ const updateCustomerController = async (req: Request, res: Response) => {
       },
     });
 
-    // Return the updated customer details
     res.status(200).json(updatedCustomer);
   } catch (err) {
     console.error('Error updating customer:', err);

@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getInvoicesByUserID, resendInvoice } from '@/services/invoice.service'; // Adjust the service import as needed
+import { getInvoicesByUserID, resendInvoice } from '@/services/invoice.service';
 import { useRouter } from 'next/navigation';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { toast } from 'react-toastify';
-import { IInvoice } from '@/interfaces/invoice.interface'; // Define IInvoice interface
-import InvoiceSearchBar from '@/components/searchBar/searchBar'; // Adjust as needed
-import { FaRegCalendarAlt, FaRegTrashAlt } from 'react-icons/fa';
+import { IInvoice } from '@/interfaces/invoice.interface';
+import InvoiceSearchBar from '@/components/searchBar/searchBar';
+import { FaRegTrashAlt } from 'react-icons/fa';
 import { Loading } from '../../../components/dashboard/loading/loadData';
 import DatePicker from '@/components/dashboard/datePicker';
 import ResendInvoiceButton from '@/components/dashboard/loading/resendButton';
@@ -17,7 +17,7 @@ import ScheduleInvoiceForm from '@/components/dashboard/forms/invoice/scheduleIn
 const InvoicePage = () => {
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [sendingEmail, setSendingEmail] = useState(false); // State for button loading
+  const [sendingEmail, setSendingEmail] = useState(false);
   const router = useRouter();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
