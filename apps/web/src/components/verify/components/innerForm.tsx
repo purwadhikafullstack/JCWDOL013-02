@@ -26,7 +26,7 @@ export default function InnerForm(props: FormikProps<FormValues>) {
     <div>
       <Form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-md -space-y-px">
-          <h2 className="text-3xl font-extrabold text-gray-900 text-center mt-5 mb-10">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mt-5 mb-10">
             Set Password
           </h2>
           <div className="relative">

@@ -13,6 +13,7 @@ import Logo from '../logo/logo';
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import AuthUser from '../auth/authUser';
 
 const RegisterSchema = Yup.object().shape({
   email: Yup.string()
@@ -71,19 +72,21 @@ const RegisterView = () => {
   );
 
   return (
-    <div
-      className="flex min-h-screen items-center justify-center bg-gray-50 w-full"
-      ref={container}
-    >
-      <div className="m-0 logo__image">
-        <Logo />
-        <div className="bg-white rounded-lg shadow-lg p-6 sm:p-12 flex justify-center form__register">
-          <div className="space-y-8">
-            <RegisterForm />
+    <AuthUser>
+      <div
+        className="flex min-h-screen items-center justify-center bg-gray-50 w-full"
+        ref={container}
+      >
+        <div className="m-0 logo__image">
+          <Logo />
+          <div className="bg-white rounded-lg shadow-lg p-6 sm:p-12 flex justify-center form__register">
+            <div className="space-y-8">
+              <RegisterForm />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </AuthUser>
   );
 };
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import SideBar from '../../components/dashboard/sideBar';
 import MobileSideBar from '../../components/dashboard/mobileSideBar';
 import NavBar from '../../components/dashboard/navBar';
+import ProtectedRoutePublic from '@/components/auth/protectedRoute/protectedRoutePublic';
 
 export default function DashboardLayout({
   children,
@@ -16,33 +17,35 @@ export default function DashboardLayout({
 
   return (
     <>
-      <div
-        className="w-full h-full relative tracking-tighter"
-        style={{
-          backgroundImage: 'url("/assets/image/pattern.png")',
-          height: '190vh',
-        }}
-      >
-        <div className="flex flex-no-wrap">
-          <SideBar />
-          <MobileSideBar show={show} setShow={setShow} />
-          <div className="w-full">
-            <NavBar
-              show={show}
-              setShow={setShow}
-              profile={profile}
-              setProfile={setProfile}
-              notif={notif}
-              setNotif={setNotif}
-            />
-            <div className="h-full">
-              <div className="lg:w-4/5 w-full h-full rounded lg:ml-72">
-                {children}
+      <ProtectedRoutePublic>
+        <div
+          className="w-full h-full relative tracking-tighter"
+          style={{
+            backgroundImage: 'url("/assets/image/pattern.png")',
+            height: '190vh',
+          }}
+        >
+          <div className="flex flex-no-wrap">
+            <SideBar />
+            <MobileSideBar show={show} setShow={setShow} />
+            <div className="w-full">
+              <NavBar
+                show={show}
+                setShow={setShow}
+                profile={profile}
+                setProfile={setProfile}
+                notif={notif}
+                setNotif={setNotif}
+              />
+              <div className="h-full">
+                <div className="lg:w-4/5 w-full h-full rounded lg:ml-72">
+                  {children}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </ProtectedRoutePublic>
     </>
   );
 }

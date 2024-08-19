@@ -40,3 +40,13 @@ export const calculateDueDate = (startDate: Date, days = 30): Date => {
   dueDate.setDate(dueDate.getDate() + days);
   return dueDate;
 };
+
+export function calculateNextInvoiceDate(invoice: any): Date | null {
+  const nextInvoiceDate = new Date(invoice.nextInvoiceDate);
+  if (invoice.recurrenceType === 'weekly') {
+    nextInvoiceDate.setDate(nextInvoiceDate.getDate() + 7);
+  } else if (invoice.recurrenceType === 'monthly') {
+    nextInvoiceDate.setMonth(nextInvoiceDate.getMonth() + 1);
+  }
+  return nextInvoiceDate;
+}

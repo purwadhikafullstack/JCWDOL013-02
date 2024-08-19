@@ -12,8 +12,7 @@ import instance from '@/utils/axiosInstance';
 import { toast } from 'react-toastify';
 import Logo from '../logo/logo';
 import { useRef } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import AuthUser from '../auth/authUser';
 
 const PasswordSchema = Yup.object().shape({
   password: Yup.string()
@@ -27,7 +26,6 @@ const VerifyPassword = () => {
   const params = useSearchParams();
   const router = useRouter();
   const container = useRef(null);
-  gsap.registerPlugin(useGSAP);
 
   const verify = async ({ password }: IUsers) => {
     try {
@@ -65,35 +63,19 @@ const VerifyPassword = () => {
     },
   })(InnerForm);
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
-
-      tl.fromTo(
-        '.logo__image',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1 },
-      );
-      tl.fromTo(
-        '.form__verify',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1 },
-      );
-    },
-    { scope: container },
-  );
-
   return (
-    <div className="min-h-screen bg-gray-50 xl:p-40" ref={container}>
-      <div className="flex text-center justify-center logo__image">
-        <Logo />
-      </div>
-      <div className="flex items-center justify-center form__verify">
-        <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-md">
-          <LoginForm />
+    <AuthUser>
+      <div className="min-h-screen bg-gray-50 xl:p-40 w-full h-full">
+        <div className="flex text-center justify-center logo__image">
+          <Logo />
+        </div>
+        <div className="flex items-center justify-center">
+          <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-md">
+            <LoginForm />
+          </div>
         </div>
       </div>
-    </div>
+    </AuthUser>
   );
 };
 

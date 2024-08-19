@@ -33,16 +33,7 @@ const NavBar = ({
       <div className="hidden lg:flex w-full pr-6 justify-end">
         <div className="w-1/2 hidden lg:flex">
           <div className="w-full flex items-center pl-8 justify-end">
-            <div className="h-full w-20 flex items-center justify-center">
-              <div
-                className="relative cursor-pointer text-gray-600"
-                onClick={() => setNotif(!notif)}
-              >
-                <FaBell size={27} color="white" />
-                <div className="w-2 h-2 rounded-full bg-red-400 border border-white absolute inset-0 mt-1 mr-1 m-auto" />
-                <Notification notif={notif} setNotif={setNotif} />
-              </div>
-            </div>
+            <div className="h-full w-20 flex items-center justify-center"></div>
             <div
               className="flex items-center relative cursor-pointer"
               onClick={() => setProfile(!profile)}

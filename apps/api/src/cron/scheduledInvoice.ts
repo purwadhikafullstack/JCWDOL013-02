@@ -37,6 +37,7 @@ export const scheduledInvoice = () => {
         include: {
           customer: true,
           products: true,
+          user: true,
         },
       });
 
@@ -47,7 +48,11 @@ export const scheduledInvoice = () => {
           to: invoice.customer?.customerEmail ?? '',
           subject: `Invoice ${invoice.invoiceNumber} - Invoeasy`,
           text: `Please find attached the invoice ${invoice.invoiceNumber}`,
-          attachmentPath: generateInvoicePDF(invoice, invoice.customer),
+          attachmentPath: generateInvoicePDF(
+            invoice,
+            invoice.customer,
+            invoice.user,
+          ),
         });
 
         let nextInvoiceDate = new Date(invoice.nextInvoiceDate ?? now);

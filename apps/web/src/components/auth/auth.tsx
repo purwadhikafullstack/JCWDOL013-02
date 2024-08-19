@@ -18,7 +18,7 @@ export default function Auth({ children }: { children: React.ReactNode }) {
         router.push('/');
       }
     }
-  });
+  }, [dispatch, router]);
 
   return <>{children}</>;
 }

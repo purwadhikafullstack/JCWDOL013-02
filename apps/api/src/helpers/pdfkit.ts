@@ -2,10 +2,19 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 
-export const generateInvoicePDF = (invoice: any, customer: any) => {
+export const generateInvoicePDF = (invoice: any, customer: any, user: any) => {
   const invoicesDir = path.join(__dirname, 'invoices');
   const fileName = `Invoeasy-${invoice.invoiceNumber}.pdf`;
   const filePath = path.join(invoicesDir, fileName);
+  const formatDateAsNumber = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so we add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+  };
+
+  const createdDateNumber = formatDateAsNumber(new Date(user.createdDate));
+  const updatedDateNumber = formatDateAsNumber(new Date(user.updatedDate));
 
   const logoPath = path.join(
     __dirname,
@@ -159,16 +168,13 @@ export const generateInvoicePDF = (invoice: any, customer: any) => {
     .fontSize(10)
     .fillColor('#333')
     .font('Helvetica')
-    .text('© Invoeasy', 50, y + 240, { align: 'left' })
-    .text('8282 Howe Springs', 50, y + 255, { align: 'left' })
-    .text('942 Schaden River', 50, y + 270, { align: 'left' })
-    .text('Phone: (123) 456-7890', 50, y + 285, { align: 'left' })
-    .text('Email: cs@invoeasy.com', 50, y + 300, { align: 'left' })
-    .text('Website: www.invoeasy.com', 50, y + 315, { align: 'left' })
-    .text('Company Registration Number: 123456789', 50, y + 330, {
+    .text(`${user.name}`, 50, y + 240, { align: 'left' })
+    .text(`Phone: ${user.phone}`, 50, y + 255, { align: 'left' })
+    .text(`Email: ${user.email}`, 50, y + 270, { align: 'left' })
+    .text(`Company Registration Number: ${createdDateNumber}`, 50, y + 285, {
       align: 'left',
     })
-    .text('VAT Number: GB123456789', 50, y + 345, { align: 'left' })
+    .text(`VAT Number: ${updatedDateNumber}`, 50, y + 300, { align: 'left' })
     .moveDown(1);
 
   doc

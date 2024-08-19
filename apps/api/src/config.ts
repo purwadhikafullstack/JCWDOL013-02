@@ -14,3 +14,4 @@ export const PORT = process.env.PORT || 8000;
 export const DATABASE_URL = process.env.DATABASE_URL || '';
 export const NODEMAILER_EMAIL = process.env.NODEMAILER_EMAIL || '';
 export const NODEMAILER_PASS = process.env.NODEMAILER_PASS || '';
+export const JWT_SECRET = process.env.JWT_SECRET || '';

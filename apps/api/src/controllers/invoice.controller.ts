@@ -7,7 +7,10 @@ import { sendInvoiceEmail } from '@/helpers/nodemailer';
 import { generateInvoicePDF } from '@/helpers/pdfkit';
 import { IFilterInvoice } from '@/interfaces/invoice.interface';
 import { softDeleteInvoice } from '@/queries/invoice.query';
-import { calculateDueDate } from '@/services/invoice.service';
+import {
+  calculateDueDate,
+  calculateNextInvoiceDate,
+} from '@/services/invoice.service';
 import { PrismaClient } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
@@ -29,11 +32,22 @@ const createInvoiceController = async (
       },
     });
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: params.customerId,
+        name: params.customerName,
+        email: params.address,
+        phone: params.phone,
+        createdDate: params.createdDate,
+        updatedDate: params.updatedDate,
+      },
+    });
+
     const data = await createInvoiceAction({
       ...params,
     });
 
-    const pdfPath = generateInvoicePDF(data, customer);
+    const pdfPath = generateInvoicePDF(data, customer, user);
     const email = await sendInvoiceEmail({
       to: customer?.customerEmail ?? '',
       subject: 'Invoeasy',
@@ -200,6 +214,7 @@ const resendInvoiceController = async (
       include: {
         customer: true,
         products: true,
+        user: true,
       },
     });
 
@@ -208,7 +223,7 @@ const resendInvoiceController = async (
       return;
     }
 
-    const pdfPath = generateInvoicePDF(invoice, invoice.customer);
+    const pdfPath = generateInvoicePDF(invoice, invoice.customer, invoice.user);
 
     const email = await sendInvoiceEmail({
       to: invoice.customer?.customerEmail ?? '',
@@ -258,7 +273,7 @@ const updateInvoiceRecurrenceController = async (
   }
 };
 
-export const createRecurringInvoiceController = async (
+const createRecurringInvoiceController = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -291,6 +306,8 @@ export const createRecurringInvoiceController = async (
             price: product.price,
           })),
         },
+        recurrenceType: invoice.recurrenceType,
+        nextInvoiceDate: calculateNextInvoiceDate(invoice),
         termsCondition: invoice.termsCondition,
         tax: invoice.tax,
         totalPrice: invoice.totalPrice,
@@ -312,4 +329,5 @@ export {
   updateInvoiceController,
   resendInvoiceController,
   updateInvoiceRecurrenceController,
+  createRecurringInvoiceController,
 };

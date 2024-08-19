@@ -10,7 +10,11 @@ import { resetPassword } from '@/services/auth.service';
 import { toast } from 'react-toastify';
 
 const PasswordSchema = Yup.object().shape({
-  password: Yup.string().required('Password is required'),
+  password: Yup.string()
+    .required('Password is required')
+    .required('Password is required')
+    .min(8, 'Password should be 8 chars minimum.')
+    .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
 });
 
 const ResetPassword = () => {
@@ -34,7 +38,7 @@ const ResetPassword = () => {
         }
         resetForm();
         toast.success(data.message);
-        router.push('/sign-in');
+        router.push('/');
       } catch (err: any) {
         toast.error(err.message);
       }

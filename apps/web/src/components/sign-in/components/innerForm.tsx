@@ -83,12 +83,12 @@ export default function InnerForm(props: FormikProps<FormValues>) {
             </TransitionLink>
           </div>
           <div className="text-center">
-            <Link
+            <TransitionLink
               href="/forgot-password"
               className="text-blue-500 hover:text-blue-600"
             >
               Forgot Password?
-            </Link>
+            </TransitionLink>
           </div>
         </div>
       </Form>
